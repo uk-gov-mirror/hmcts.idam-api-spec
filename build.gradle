@@ -1,0 +1,107 @@
+import io.swagger.codegen.DefaultGenerator
+import io.swagger.codegen.config.CodegenConfigurator
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'io.swagger:swagger-codegen:2.2.2'
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
+}
+
+
+version = '2.1.1'
+group = 'uk.gov.hmcts.reform.idam'
+
+description = """idam-api-spec"""
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    maven {
+        url 'https://dl.bintray.com/hmcts/hmcts-maven'
+    }
+    maven {
+        url 'https://artifactory.reform.hmcts.net/artifactory/libs-release/'
+    }
+    jcenter()
+}
+
+configurations {
+    generatedCompile
+    compile.extendsFrom generatedCompile
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'uk.gov.hmcts:idam-bom:1.0.30'
+    }
+}
+
+dependencies {
+    generatedCompile group: 'org.springframework', name: 'spring-web'
+    generatedCompile group: 'javax.validation', name: 'validation-api'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger2'
+}
+
+def swaggerSourceFile = 'src/main/resources/api.yaml'
+def swaggerTargetFolder = 'src/generated/java'
+
+task generateApi {
+    inputs.file("$projectDir/$swaggerSourceFile")
+    outputs.dir("$buildDir")
+    doLast{
+        def config = new CodegenConfigurator()
+        config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
+        config.setOutputDir("$buildDir")
+        config.setLang('spring')
+        config.setAdditionalProperties([
+                'interfaceOnly'                : 'true',
+                'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api',
+                'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.model',
+                'sourceFolder'                 : swaggerTargetFolder,
+                'dateLibrary'                  : 'java8',
+                'generateModelDocumentation'   : 'false'
+        ])
+        new DefaultGenerator().opts(config.toClientOptInput()).generate()
+    }
+}
+
+sourceSets {
+    generated {
+        java {
+            srcDirs "$buildDir/$swaggerTargetFolder"
+        }
+    }
+}
+
+jar {
+    from sourceSets.generated.output
+}
+
+compileGeneratedJava.dependsOn generateApi
+classes.dependsOn generatedClasses
+compileJava.dependsOn compileGeneratedJava
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
