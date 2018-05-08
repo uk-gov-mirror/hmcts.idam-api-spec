@@ -1,4 +1,4 @@
-## Description
+# Description
 A few sentences describing the overall goals of the pull request's commits. Ideally, this would be:
 
 #### Motivation:
