@@ -37,9 +37,6 @@ repositories {
     maven {
         url 'https://dl.bintray.com/hmcts/hmcts-maven'
     }
-    maven {
-        url 'https://artifactory.reform.hmcts.net/artifactory/libs-release/'
-    }
     jcenter()
 }
 
@@ -50,7 +47,7 @@ configurations {
 
 dependencyManagement {
     imports {
-        mavenBom 'uk.gov.hmcts.reform.idam:idam-bom:1.0.33'
+        mavenBom 'uk.gov.hmcts.reform.idam:idam-bom:1.1.0'
     }
 }
 
