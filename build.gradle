@@ -50,7 +50,7 @@ configurations {
 
 dependencyManagement {
     imports {
-        mavenBom 'uk.gov.hmcts.reform.idam:idam-bom:1.0.30'
+        mavenBom 'uk.gov.hmcts.reform.idam:idam-bom:1.0.33'
     }
 }
 

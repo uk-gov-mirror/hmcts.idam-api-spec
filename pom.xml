@@ -9,9 +9,9 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>uk.gov.hmcts</groupId>
+        <groupId>uk.gov.hmcts.reform.idam</groupId>
         <artifactId>idam-bom</artifactId>
-        <version>1.0.30</version>
+        <version>1.0.33</version>
     </parent>
 
     <properties>
