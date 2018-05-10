@@ -8,8 +8,6 @@ cache:
   - $HOME/.gradle/wrapper/
 script:
 - ./gradlew build
-- ./gradlew jacocoTestReport
-- ./gradlew jacocoTestCoverageVerification
 after_success:
 - bash <(curl -s https://codecov.io/bash)
 deploy:
