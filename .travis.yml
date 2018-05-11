@@ -10,7 +10,7 @@ script:
 - "./gradlew build"
 deploy:
 - provider: script
-  script: "./gradlew bintrayUpload"
+  script: "./gradlew bintrayUpload --info"
   skip_cleanup: true
   on:
     repo: hmcts/idam-api-spec
