@@ -1480,9 +1480,6 @@ definitions:
         description: The list of the roles of the user
         items:
           type: string
-      userName:
-        type: string
-        description: The user name
     required: [id, forename, surname, email]
 
   Pin:
