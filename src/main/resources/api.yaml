@@ -1142,6 +1142,24 @@ paths:
         404:
           description: "User does not exist"
 
+  /testing-support/accounts/pin/{userId:.+}:
+    get:
+      operationId: "getPinByUserId"
+      description: "Gets the pin by userId"
+      parameters:
+        - in: path
+          name: userId
+          type: string
+          required: true
+      responses:
+        200:
+          description: "The user pin has been found"
+          schema:
+            type: string
+            description: "The user pin"
+        404:
+          description: "User Not Found or Not a PIN User"
+
   /testing-support/services/{service:.+}:
     delete:
       operationId: "deleteTestService"
@@ -1456,6 +1474,9 @@ definitions:
         description: The list of the roles of the user
         items:
           type: string
+      userName:
+        type: string
+        description: The user name
     required: [id, forename, surname, email]
 
   Pin:
