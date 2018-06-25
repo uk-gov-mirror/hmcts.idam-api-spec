@@ -1406,6 +1406,9 @@ definitions:
       oauth2ClientId:
         type: string
         description: The Oauth2 Client Id
+      activationRedirectUrl:
+        type: string
+        description: The url to take a user to after their account is activated.
     required: [label, description, allowedRoles]
 
   ServiceUpdate:
@@ -1438,6 +1441,9 @@ definitions:
         type: array
         items:
           type: string
+      activationRedirectUrl:
+        type: string
+        description: The url to take a user to after their account is activated.
       selfRegistrationAllowed:
         type: boolean
         description: Flag indicating whether Self-service registration is enabled for this service. If omitted, defaults to false.
