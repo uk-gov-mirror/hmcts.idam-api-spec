@@ -596,6 +596,30 @@ paths:
             $ref: '#/definitions/User'
         404:
           description: "The user  does not exist"
+    delete:
+      operationId: deleteUser
+      description: "Deletes the user."
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          required: true
+          description: The Base64-encoded authorization token
+          example: AdminApiAuthToken [api-auth-token]
+        - in: path
+          name: userId
+          type: string
+          required: true
+          description: "The id of the user"
+      responses:
+        200:
+          description: "The user has been deleted"
+        403:
+          description: "You were unable to delete the user, you don't have permission."
+        500:
+          description: "Server error"
+          schema:
+            $ref: '#/definitions/ErrorMap'
 
   /users/{userId}/roles/{roleId}:
     patch:
