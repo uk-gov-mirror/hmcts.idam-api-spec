@@ -1207,6 +1207,24 @@ paths:
           description: "The service has been deleted"
         404:
           description: "Could not find the service"
+    patch:
+      operationId: "patchService"
+      description: "Apply partial modifications to a service"
+      parameters:
+        - in: path
+          name: service
+          type: string
+          required: true
+        - in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/PatchRequest'
+      responses:
+          204:
+            description: "The service has been updated"
+          404:
+            description: "Could not find the service"
 
   /testing-support/roles/{role:.+}:
     delete:
