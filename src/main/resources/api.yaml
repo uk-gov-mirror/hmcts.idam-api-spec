@@ -1489,6 +1489,10 @@ definitions:
         type: array
         items:
           type: string
+      oauth2Scopes:
+        type: array
+        items:
+          type: string
       activationRedirectUrl:
         type: string
         description: The url to take a user to after their account is activated.
