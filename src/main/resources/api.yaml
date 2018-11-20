@@ -501,6 +501,24 @@ paths:
         201:
           description: "User created successfully"
 
+  /users/selfregisterpui:
+      post:
+        operationId: "selfRegistrationPui"
+        description: "Self register a user via a PUI registration process."
+        parameters:
+          - in: header
+            name: accessToken
+            description: The access token associated to the session
+            required: true
+            type: string
+          - in: body
+            name: request
+            required: true
+            schema:
+              $ref: '#/definitions/SelfRegisterPuiRequest'
+        responses:
+          201:
+            description: "User created successfully"
 
   /validate:
       post:
@@ -1295,6 +1313,35 @@ definitions:
         type: string
         description: "The service client ID"
     required: [email, firstname, lastname]
+
+  SelfRegisterPuiRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          pattern: ^[^()!&/;%*]*$
+          description: "email used for registration"
+        firstName:
+          type: string
+          description: "first name"
+        lastName:
+          type: string
+          description: "last name"
+        roles:
+          type: array
+          items:
+            type: string
+          description: "The names of the roles to be assigned to the user"
+        redirectUri:
+          type: string
+          decription: "URI to redirect the user to after successful account activation. This URL
+          must match one of the registered URLs for the OAuth2 application linked to the service
+          initiating the registration journey."
+        clientId:
+          type: string
+          description: "The service client ID"
+      required: [email, firstname, lastname]
 
   ValidateRequest:
       type: object
