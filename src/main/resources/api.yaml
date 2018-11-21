@@ -348,6 +348,39 @@ paths:
         403:
           description: "Username password combination not found"
 
+  /oauth2/clientCredentials:
+    post:
+      operationId: "clientCredentials"
+      description: "Initiates an OAuth2 client credentials flow"
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: client_id
+          description: OAuth2 client id of the service initiating the OAuth2 flow.
+          required: true
+          type: string
+        - in: formData
+          name: client_secret
+          description: OAuth2 client secret of the service initiating the OAuth2 flow.
+          required: true
+          type: string
+      - in: formData
+          name: scopes
+          description: The required scopes.
+          required: true
+          type: array
+            items:
+              type: string
+      responses:
+        200:
+          description: "Authorized"
+          schema:
+            type: string
+            description: "The JWT token containing the roles information for the user"
+
   /login/uplift:
     post:
       operationId: "upliftUser"
@@ -358,38 +391,38 @@ paths:
       produces:
         - application/json
       parameters:
-          - in: formData
-            name: userName
-            description: The existing user's username.
-            required: true
-            type: string
-          - in: formData
-            name: password
-            description: The existing user's password.
-            required: true
-            type: string
-          - in: formData
-            name: jwt
-            description: The authenticated PIN user's access token.
-            required: true
-            type: string
-          - in: formData
-            name: redirectUri
-            description: "URI to redirect the user to after successful uplift. This URL
-            must match one of the registered URLs for the OAuth2 application linked to the service
-            initiating the authentication flow."
-            required: true
-            type: string
-          - in: formData
-            name: clientId
-            description: OAuth2 client id of the service initiating the uplift journey.
-            required: true
-            type: string
-          - in: formData
-            name: state
-            description: Optional state to be sent back to the initiating service after successful uplift.
-            required: true
-            type: string
+        - in: formData
+          name: userName
+          description: The existing user's username.
+          required: true
+          type: string
+        - in: formData
+          name: password
+          description: The existing user's password.
+          required: true
+          type: string
+        - in: formData
+          name: jwt
+          description: The authenticated PIN user's access token.
+          required: true
+          type: string
+        - in: formData
+          name: redirectUri
+          description: "URI to redirect the user to after successful uplift. This URL
+          must match one of the registered URLs for the OAuth2 application linked to the service
+          initiating the authentication flow."
+          required: true
+          type: string
+        - in: formData
+          name: clientId
+          description: OAuth2 client id of the service initiating the uplift journey.
+          required: true
+          type: string
+        - in: formData
+          name: state
+          description: Optional state to be sent back to the initiating service after successful uplift.
+          required: true
+          type: string
 
       responses:
         200:
