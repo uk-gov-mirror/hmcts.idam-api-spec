@@ -359,21 +359,20 @@ paths:
       parameters:
         - in: formData
           name: client_id
-          description: OAuth2 client id of the service initiating the OAuth2 flow.
+          description: "OAuth2 client id of the service initiating the OAuth2 flow."
           required: true
           type: string
         - in: formData
           name: client_secret
-          description: OAuth2 client secret of the service initiating the OAuth2 flow.
+          description: "OAuth2 client secret of the service initiating the OAuth2 flow."
           required: true
           type: string
-      - in: formData
+        - in: formData
           name: scopes
-          description: The required scopes.
+          description: "The required scopes."
           required: true
-          type: array
-            items:
-              type: string
+          schema:
+            $ref: '#/definitions/ArrayOfStrings'
       responses:
         200:
           description: "Authorized"
