@@ -368,11 +368,10 @@ paths:
           required: true
           type: string
         - in: formData
-          name: scopes
-          description: "The required scopes."
+          name: scope
+          description: "The required scope."
           required: true
-          schema:
-            $ref: '#/definitions/ArrayOfStrings'
+          type: string
       responses:
         200:
           description: "Authorized"
@@ -512,8 +511,7 @@ paths:
         - in: query
           name: jwt
           required: true
-          schema:
-            type: string
+          type: string
           description: JWT token from PIN temp user
       responses:
         201:
