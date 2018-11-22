@@ -1373,6 +1373,10 @@ definitions:
       properties:
         sub:
           type: string
+        scope:
+          type: array
+          items:
+            type: string
 
   IdTokenInfo:
       type: object
