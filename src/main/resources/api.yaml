@@ -1451,6 +1451,9 @@ definitions:
       oauth2ClientId:
         type: string
         description: The Oauth2 Client Id
+      oauth2Scope:
+        type: string
+        description: The Oauth2 Client scope
       activationRedirectUrl:
         type: string
         description: The url to take a user to after their account is activated.
@@ -1489,6 +1492,8 @@ definitions:
         type: array
         items:
           type: string
+      oauth2Scope:
+        type: string
       activationRedirectUrl:
         type: string
         description: The url to take a user to after their account is activated.
