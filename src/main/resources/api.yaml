@@ -314,29 +314,39 @@ paths:
         - application/json
       parameters:
         - in: header
-          name: client_credentials
+          name: authorization
           required: false
           type: string
         - in: formData
           name: code
-          description: OAuth2 code returned by the /authorize call
-          required: true
+          description: "OAuth2 code returned by the /authorize call"
+          required: false
           type: string
         - in: formData
           name: redirect_uri
           description: "URI to redirect the user to after successful authentication. The redirect
           URL in this request should match exactly the redirect URL that was included in the
           initial authorization request for this authorization code (/authorize)."
-          required: true
+          required: false
           type: string
         - in: formData
           name: client_id
-          description: OAuth2 client id of the service initiating the OAuth2 flow.
+          description: "OAuth2 client id of the service initiating the OAuth2 flow."
           required: false
           type: string
         - in: formData
           name: client_secret
-          description: OAuth2 client secret of the service initiating the OAuth2 flow.
+          description: "OAuth2 client secret of the service initiating the OAuth2 flow."
+          required: false
+          type: string
+        - in: formData
+          name: scope
+          description: "The required scope."
+          required: false
+          type: string
+        - in: formData
+          name: grant_type
+          description: "The grant type. Optional"
           required: false
           type: string
       responses:
@@ -347,37 +357,6 @@ paths:
             description: "The JWT token containing the roles information for the user"
         403:
           description: "Username password combination not found"
-
-  /oauth2/clientCredentials:
-    post:
-      operationId: "clientCredentials"
-      description: "Initiates an OAuth2 client credentials flow"
-      consumes:
-        - application/x-www-form-urlencoded
-      produces:
-        - application/json
-      parameters:
-        - in: formData
-          name: client_id
-          description: "OAuth2 client id of the service initiating the OAuth2 flow."
-          required: true
-          type: string
-        - in: formData
-          name: client_secret
-          description: "OAuth2 client secret of the service initiating the OAuth2 flow."
-          required: true
-          type: string
-        - in: formData
-          name: scope
-          description: "The required scope."
-          required: true
-          type: string
-      responses:
-        200:
-          description: "Authorized"
-          schema:
-            type: string
-            description: "The JWT token containing the roles information for the user"
 
   /login/uplift:
     post:
@@ -496,7 +475,6 @@ paths:
           schema:
             $ref: '#/definitions/ErrorMap'
 
-
   /users/self:
     post:
       operationId: "selfRegisterUser"
@@ -511,6 +489,7 @@ paths:
         - in: query
           name: jwt
           required: true
+          schema:
           type: string
           description: JWT token from PIN temp user
       responses:
