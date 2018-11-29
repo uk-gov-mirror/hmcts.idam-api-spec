@@ -319,7 +319,7 @@ paths:
           type: string
         - in: formData
           name: code
-          description: "OAuth2 code returned by the /authorize call"
+          description: "OAuth2 code returned by the /authorize call. Required when grant_type=authorization_code"
           required: false
           type: string
         - in: formData
@@ -346,7 +346,7 @@ paths:
           type: string
         - in: formData
           name: grant_type
-          description: "The grant type. Optional"
+          description: "The grant type. Optional (defaults to 'authorization_code')"
           required: false
           type: string
       responses:
