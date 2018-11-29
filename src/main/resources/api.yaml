@@ -314,29 +314,39 @@ paths:
         - application/json
       parameters:
         - in: header
-          name: client_credentials
+          name: authorization
           required: false
           type: string
         - in: formData
           name: code
-          description: OAuth2 code returned by the /authorize call
-          required: true
+          description: "OAuth2 code returned by the /authorize call. Required when grant_type=authorization_code"
+          required: false
           type: string
         - in: formData
           name: redirect_uri
           description: "URI to redirect the user to after successful authentication. The redirect
           URL in this request should match exactly the redirect URL that was included in the
           initial authorization request for this authorization code (/authorize)."
-          required: true
+          required: false
           type: string
         - in: formData
           name: client_id
-          description: OAuth2 client id of the service initiating the OAuth2 flow.
+          description: "OAuth2 client id of the service initiating the OAuth2 flow."
           required: false
           type: string
         - in: formData
           name: client_secret
-          description: OAuth2 client secret of the service initiating the OAuth2 flow.
+          description: "OAuth2 client secret of the service initiating the OAuth2 flow."
+          required: false
+          type: string
+        - in: formData
+          name: scope
+          description: "The required scope."
+          required: false
+          type: string
+        - in: formData
+          name: grant_type
+          description: "The grant type. Optional (defaults to 'authorization_code')"
           required: false
           type: string
       responses:
@@ -358,38 +368,38 @@ paths:
       produces:
         - application/json
       parameters:
-          - in: formData
-            name: userName
-            description: The existing user's username.
-            required: true
-            type: string
-          - in: formData
-            name: password
-            description: The existing user's password.
-            required: true
-            type: string
-          - in: formData
-            name: jwt
-            description: The authenticated PIN user's access token.
-            required: true
-            type: string
-          - in: formData
-            name: redirectUri
-            description: "URI to redirect the user to after successful uplift. This URL
-            must match one of the registered URLs for the OAuth2 application linked to the service
-            initiating the authentication flow."
-            required: true
-            type: string
-          - in: formData
-            name: clientId
-            description: OAuth2 client id of the service initiating the uplift journey.
-            required: true
-            type: string
-          - in: formData
-            name: state
-            description: Optional state to be sent back to the initiating service after successful uplift.
-            required: true
-            type: string
+        - in: formData
+          name: userName
+          description: The existing user's username.
+          required: true
+          type: string
+        - in: formData
+          name: password
+          description: The existing user's password.
+          required: true
+          type: string
+        - in: formData
+          name: jwt
+          description: The authenticated PIN user's access token.
+          required: true
+          type: string
+        - in: formData
+          name: redirectUri
+          description: "URI to redirect the user to after successful uplift. This URL
+          must match one of the registered URLs for the OAuth2 application linked to the service
+          initiating the authentication flow."
+          required: true
+          type: string
+        - in: formData
+          name: clientId
+          description: OAuth2 client id of the service initiating the uplift journey.
+          required: true
+          type: string
+        - in: formData
+          name: state
+          description: Optional state to be sent back to the initiating service after successful uplift.
+          required: true
+          type: string
 
       responses:
         200:
@@ -465,7 +475,6 @@ paths:
           schema:
             $ref: '#/definitions/ErrorMap'
 
-
   /users/self:
     post:
       operationId: "selfRegisterUser"
@@ -481,7 +490,7 @@ paths:
           name: jwt
           required: true
           schema:
-            type: string
+          type: string
           description: JWT token from PIN temp user
       responses:
         201:
