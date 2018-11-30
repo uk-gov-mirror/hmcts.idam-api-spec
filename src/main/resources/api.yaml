@@ -489,7 +489,6 @@ paths:
         - in: query
           name: jwt
           required: true
-          schema:
           type: string
           description: JWT token from PIN temp user
       responses:
@@ -510,10 +509,10 @@ paths:
         201:
           description: "User created successfully"
 
-  /users/selfregisterpui:
+  /user/registration:
       post:
-        operationId: "selfRegistrationPui"
-        description: "Self register a user via a PUI registration process."
+        operationId: "Registration"
+        description: "Self register a user via a 3rd party registration process."
         parameters:
           - in: header
             name: accessToken
@@ -524,10 +523,18 @@ paths:
             name: request
             required: true
             schema:
-              $ref: '#/definitions/SelfRegisterPuiRequest'
+              $ref: '#/definitions/UserRegistrationRequest'
         responses:
           201:
-            description: "User created successfully"
+            description: Registration accepted
+          401:
+            description: Missing bearer token
+          403:
+            description: Bearer token is expired or does not have create_user scope.
+          409:
+            description: User with this email already exists.
+          400:
+            description: Required parameters are missing or invalid.
 
   /validate:
       post:
@@ -1323,7 +1330,7 @@ definitions:
         description: "The service client ID"
     required: [email, firstname, lastname]
 
-  SelfRegisterPuiRequest:
+  UserRegistrationRequest:
       type: object
       properties:
         email:
@@ -1342,14 +1349,6 @@ definitions:
           items:
             type: string
           description: "The names of the roles to be assigned to the user"
-        redirectUri:
-          type: string
-          decription: "URI to redirect the user to after successful account activation. This URL
-          must match one of the registered URLs for the OAuth2 application linked to the service
-          initiating the registration journey."
-        clientId:
-          type: string
-          description: "The service client ID"
       required: [email, firstname, lastname]
 
   ValidateRequest:
