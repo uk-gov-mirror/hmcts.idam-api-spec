@@ -489,7 +489,6 @@ paths:
         - in: query
           name: jwt
           required: true
-          schema:
           type: string
           description: JWT token from PIN temp user
       responses:
@@ -510,6 +509,32 @@ paths:
         201:
           description: "User created successfully"
 
+  /user/registration:
+      post:
+        operationId: "Registration"
+        description: "Self register a user via a 3rd party registration process."
+        parameters:
+          - in: header
+            name: accessToken
+            description: The access token associated to the session
+            required: true
+            type: string
+          - in: body
+            name: request
+            required: true
+            schema:
+              $ref: '#/definitions/UserRegistrationRequest'
+        responses:
+          201:
+            description: Registration accepted
+          401:
+            description: Missing bearer token
+          403:
+            description: Bearer token is expired or does not have create_user scope.
+          409:
+            description: User with this email already exists.
+          400:
+            description: Required parameters are missing or invalid.
 
   /validate:
       post:
@@ -1305,6 +1330,27 @@ definitions:
         description: "The service client ID"
     required: [email, firstname, lastname]
 
+  UserRegistrationRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          pattern: ^[^()!&/;%*]*$
+          description: "email used for registration"
+        firstName:
+          type: string
+          description: "first name"
+        lastName:
+          type: string
+          description: "last name"
+        roles:
+          type: array
+          items:
+            type: string
+          description: "The names of the roles to be assigned to the user"
+      required: [email, firstname, lastname]
+
   ValidateRequest:
       type: object
       properties:
@@ -1335,6 +1381,10 @@ definitions:
       properties:
         sub:
           type: string
+        scope:
+          type: array
+          items:
+            type: string
 
   IdTokenInfo:
       type: object
