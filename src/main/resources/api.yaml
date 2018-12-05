@@ -515,7 +515,7 @@ paths:
         description: "Self register a user via a 3rd party registration process."
         parameters:
           - in: header
-            name: accessToken
+            name: authorization
             description: The access token associated to the session
             required: true
             type: string
