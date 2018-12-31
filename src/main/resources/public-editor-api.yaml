@@ -1,0 +1,119 @@
+swagger: '2.0'
+info:
+  version: 1.0.13
+  title: User Management API
+  description: >-
+
+paths:
+  /user/registration:
+    post:
+      operationId: "Registration"
+      description: "Self register a user via a 3rd party registration process."
+      parameters:
+      - in: header
+        name: authorization
+        description: The access token associated to the session
+        required: true
+        type: string
+      - in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UserRegistrationRequest'
+      responses:
+        201:
+          description: Registration accepted
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have create-user scope.
+        409:
+          description: User with this email already exists.
+        400:
+          description: Required parameters are missing or invalid.
+  /account/role:
+    post:
+      operationId: "assignUserToRole"
+      description: "Assign the authenticated user to a role. The role is unique identified by its name."
+      parameters:
+      - in: header
+        name: authorization
+        description: >-
+          The access token granted to the client application after user authentication. The role is assigned to
+          the user the client application is acting on behalf of.
+        required: true
+        type: string
+      - in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/RoleDefinition'
+      responses:
+        201:
+          description: The role assignment is successful.
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-role scope.
+        412:
+          description: User is already assigned to this role or the role does not exist
+    delete:
+      operationId: "unassignUserFromRole"
+      description: "Removes the assignment of the authenticated user to the role, uniquely identified by its name."
+      parameters:
+      - in: header
+        name: authorization
+        description: >-
+          The access token granted to the client application after user authentication. The role is unassigned from
+          the user the client application is acting on behalf of.
+        required: true
+        type: string
+      - in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/RoleDefinition'
+      responses:
+        200:
+          description: The role assignment is successfully removed.
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-role scope.
+        412:
+          description: User is not assigned to this role or the role does not exist.
+
+definitions:
+  UserRegistrationRequest:
+    type: object
+    properties:
+      email:
+        type: string
+        format: email
+        pattern: ^[^()!&/;%*]*$
+        description: "email used for registration"
+      firstName:
+        type: string
+        description: "first name"
+      lastName:
+        type: string
+        description: "last name"
+      roles:
+        type: array
+        items:
+          type: string
+        description: "The names of the roles to be assigned to the user"
+    required: [email, firstname, lastname]
+
+  RoleDefinition:
+    type: object
+    properties:
+      name:
+        type: string
+        minLength: 1
+        description: "Unique name of the role"
+    required: [name]
