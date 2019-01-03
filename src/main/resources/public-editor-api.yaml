@@ -98,9 +98,11 @@ definitions:
         description: "email used for registration"
       firstName:
         type: string
+        minLength: 1
         description: "first name"
       lastName:
         type: string
+        minLength: 1
         description: "last name"
       roles:
         type: array
