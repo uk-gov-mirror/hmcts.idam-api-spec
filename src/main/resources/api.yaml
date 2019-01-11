@@ -405,6 +405,11 @@ paths:
           description: Optional state to be sent back to the initiating service after successful uplift.
           required: true
           type: string
+        - in: formData
+          name: scope
+          description: Optional scope to be requested from the user.
+          required: false
+          type: string
 
       responses:
         200:
