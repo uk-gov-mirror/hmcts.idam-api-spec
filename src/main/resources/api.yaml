@@ -1266,7 +1266,7 @@ definitions:
       email:
         type: string
         format: email
-        pattern: ^[^()!&/;%*]*$
+        pattern: ^[^()!&/;%*]+@[^()!&/;%*]+$
         description: "email used for registration"
       password:
         type: string
@@ -1295,7 +1295,7 @@ definitions:
       email:
         type: string
         format: email
-        pattern: ^[^()!&/;%*]*$
+        pattern: ^[^()!&/;%*]+@[^()!&/;%*]+$
         description: "email used for registration"
       firstName:
         type: string
@@ -1554,6 +1554,7 @@ definitions:
         description: The last name of the user
       email:
         type: string
+        pattern: ^[^()!&/;%*]+@[^()!&/;%*]+$
         description: The email of the user
       accountStatus:
         type: string
@@ -1624,7 +1625,7 @@ definitions:
         description: The user id
       email:
         type: string
-        pattern: ^[^()!&/;%*]*$
+        pattern: ^[^()!&/;%*]+@[^()!&/;%*]+$
         description: The user email address
       forename:
         type: string
@@ -1657,6 +1658,7 @@ definitions:
     properties:
       email:
         type: string
+        pattern: ^[^()!&/;%*]+@[^()!&/;%*]+$
         description: Email identifying the user account
       redirectUri:
         type: string
