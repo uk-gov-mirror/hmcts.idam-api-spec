@@ -94,7 +94,7 @@ definitions:
       email:
         type: string
         format: email
-        pattern: ^[^()!&/;%*]+@[^()!&/;%*]+$
+        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
         description: "email used for registration"
       firstName:
         type: string
