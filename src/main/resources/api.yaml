@@ -1177,8 +1177,8 @@ paths:
         409:
           description: "The user already exists."
 
-  /testing-support/deleteAll:
-    post:
+  /testing-support/test-data:
+    delete:
       operationId: "deleteAllTestData"
       description: "Delete all test data"
       responses:
