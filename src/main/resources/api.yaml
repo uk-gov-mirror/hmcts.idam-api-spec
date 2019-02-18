@@ -1540,6 +1540,11 @@ definitions:
       clientSecret:
         type: string
         description: The agent password
+      scopes:
+        type: array
+        items:
+          type: string
+        description: The scopes available to this agent
       redirectUris:
         type: array
         items:
