@@ -1319,6 +1319,10 @@ definitions:
       clientId:
         type: string
         description: "The service client ID"
+      state:
+        type: string
+        description: "Optional state reference that will be added to the redirect URL and be
+        available for the target system after the user is activated"
     required: [email, firstname, lastname]
 
   ValidateRequest:
