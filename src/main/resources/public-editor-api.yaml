@@ -4,6 +4,15 @@ info:
   title: User Management API
   description: >-
 
+securityDefinitions:
+  auth:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: /login
+    tokenUrl: /oauth2/token
+    scopes:
+      manage-user: allows modifying a User resource
+
 paths:
   /user/registration:
     post:
@@ -31,6 +40,92 @@ paths:
           description: User with this email already exists.
         400:
           description: Required parameters are missing or invalid.
+  /user/{userId}:
+    get:
+      description: Get the user details given his userId.
+      summary: getUsersByUserid
+      operationId: GetUsersByUserId
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: The userId of the user to be found (e.g. 'f65bd0f5-e733-4f4a-9ed4-901444ece494')
+      responses:
+        200:
+          description: The details of the requested user
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: The user does not exist.
+        default:
+          description: An error occurred while retrieving the user details.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+    patch:
+      description: 'Update the user details.  '
+      summary: updateUserDetails
+      operationId: UpdateUserDetails
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: The userId of the user to be updated
+        - name: body
+          in: body
+          required: true
+          description: the body of the User JSON object containing the fields to update.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: User updated successfully.
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: The user to be updated could not be found.
+        default:
+          description: An error occurred while updating the user details.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+    delete:
+      description: 'Delete the user.  '
+      summary: deleteUser
+      operationId: UsersByUserIdDelete
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: The userId of the user to be deleted
+      responses:
+        204:
+          description: User deleted successfully.
+        404:
+          description: The user to be deleted could not be found.
+        default:
+          description: An error occurred while deleting the user.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
   /account/role:
     post:
       operationId: "assignUserToRole"
@@ -119,3 +214,52 @@ definitions:
         minLength: 1
         description: "Unique name of the role"
     required: [name]
+  User:
+    title: User
+    type: object
+    properties:
+      id:
+        description: Unique ID for the user
+        type: string
+      forename:
+        description: The first name of the user
+        type: string
+      surname:
+        description: The last name of the user
+        type: string
+      email:
+        description: The email of the user
+        type: string
+      accountStatus:
+        $ref: '#/definitions/AccountStatus'
+      roles:
+        description: The list of the roles of the user
+        type: array
+        items:
+          type: string
+    required:
+      - id
+  ErrorMap:
+    title: ErrorMap
+    example:
+      code: 403
+      description: something went wrong
+    type: object
+    properties:
+      code:
+        description: The error code
+        type: string
+      description:
+        description: The description of the error
+        type: string
+    required:
+      - code
+  AccountStatus:
+    title: AccountStatus
+    description: The account status of the user
+    example: suspended
+    type: string
+    enum:
+      - suspended
+      - active
+      - locked
