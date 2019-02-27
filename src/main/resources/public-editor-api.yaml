@@ -42,9 +42,9 @@ paths:
           description: Required parameters are missing or invalid.
   /user/{userId}:
     get:
-      description: Get the user details given his userId.
-      summary: getUsersByUserid
-      operationId: GetUsersByUserId
+      description: Get the user details given their userId.
+      summary: getUserByUserid
+      operationId: GetUserByUserId
       deprecated: false
       produces:
         - application/json
