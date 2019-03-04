@@ -67,7 +67,7 @@ paths:
         401:
           description: Missing bearer token
         403:
-          description: Bearer token is expired or does not have manage-role scope.
+          description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user does not exist.
         500:
@@ -282,5 +282,5 @@ definitions:
       description:
         description: The description of the error
         type: string
-    required:git commuit
+    required:
       - code
