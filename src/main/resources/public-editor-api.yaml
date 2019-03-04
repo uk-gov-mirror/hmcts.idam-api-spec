@@ -76,6 +76,11 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
         - name: userId
           in: path
           required: true
@@ -102,13 +107,18 @@ paths:
         - auth:
             - manage-user
     delete:
-      description: 'Delete the user.  '
+      description: 'Delete the user.'
       summary: deleteUser
-      operationId: UsersByUserIdDelete
+      operationId: deleteUserByUserId
       deprecated: false
       produces:
         - application/json
       parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
         - name: userId
           in: path
           required: true
