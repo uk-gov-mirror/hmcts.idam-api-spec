@@ -49,6 +49,11 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
         - name: userId
           in: path
           required: true
@@ -59,6 +64,12 @@ paths:
           description: The details of the requested user
           schema:
             $ref: '#/definitions/User'
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user does not exist.
         500:
@@ -97,6 +108,12 @@ paths:
           description: User updated successfully.
           schema:
             $ref: '#/definitions/User'
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user to be updated could not be found.
         500:
@@ -127,6 +144,12 @@ paths:
       responses:
         204:
           description: User deleted successfully.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
+        400:
+          description: Required parameters are missing or invalid.
         404:
           description: The user to be deleted could not be found.
         500:
@@ -233,22 +256,27 @@ definitions:
       forename:
         description: The first name of the user
         type: string
+        minLength: 1
       surname:
         description: The last name of the user
         type: string
+        minLength: 1
       email:
         description: The email of the user
         pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
         type: string
-      accountStatus:
-        $ref: '#/definitions/AccountStatus'
+      active:
+        description: Flag indicating whether the user is active (false means the user is suspended).
+        type: boolean
+      locked:
+        readOnly: true
+        description: Flag indicating whether the user is locked (false means the user is active).
+        type: boolean
       roles:
         description: The list of the roles of the user
         type: array
         items:
           type: string
-    required:
-      - id
   ErrorMap:
     title: ErrorMap
     example:
@@ -264,12 +292,3 @@ definitions:
         type: string
     required:
       - code
-  AccountStatus:
-    title: AccountStatus
-    description: The account status of the user
-    example: suspended
-    type: string
-    enum:
-      - suspended
-      - active
-      - locked
