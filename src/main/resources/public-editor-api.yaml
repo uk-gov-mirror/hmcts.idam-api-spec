@@ -64,10 +64,12 @@ paths:
           description: The details of the requested user
           schema:
             $ref: '#/definitions/User'
+        400:
+          description: Required parameters are missing or invalid.
         401:
           description: Missing bearer token
         403:
-          description: Bearer token is expired or does not have manage-role scope.
+          description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user does not exist.
         500:
@@ -106,6 +108,8 @@ paths:
           description: User updated successfully.
           schema:
             $ref: '#/definitions/User'
+        400:
+          description: Required parameters are missing or invalid.
         401:
           description: Missing bearer token
         403:
@@ -144,6 +148,8 @@ paths:
           description: Missing bearer token
         403:
           description: Bearer token is expired or does not have manage-user scope.
+        400:
+          description: Required parameters are missing or invalid.
         404:
           description: The user to be deleted could not be found.
         500:
