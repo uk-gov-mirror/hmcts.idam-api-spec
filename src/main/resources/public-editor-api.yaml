@@ -67,7 +67,7 @@ paths:
         401:
           description: Missing bearer token
         403:
-          description: Bearer token is expired or does not have manage-user scope.
+          description: Bearer token is expired or does not have manage-role scope.
         404:
           description: The user does not exist.
         500:
@@ -259,11 +259,13 @@ definitions:
         description: The email of the user
         pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
         type: string
-      accountStatus:
-        description: The account status of the user
-        example: suspended
-        type: string
-        minLength: 1
+      active:
+        description: Flag indicating whether the user is active (false means the user is suspended).
+        type: boolean
+      locked:
+        readOnly: true
+        description: Flag indicating whether the user is locked (false means the user is active).
+        type: boolean
       roles:
         description: The list of the roles of the user
         type: array
