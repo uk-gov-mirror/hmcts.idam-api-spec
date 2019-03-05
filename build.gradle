@@ -6,20 +6,20 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'io.swagger:swagger-codegen:2.2.3'
-        classpath 'io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE'
+        classpath 'io.swagger:swagger-codegen:2.4.2'
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.7.RELEASE'
     }
 }
 
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'io.spring.dependency-management' version '1.0.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.7.RELEASE'
     id 'com.jfrog.bintray' version '1.8.0'
 }
 
 
-version = '2.7.1'
+version = '2.7.2'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -52,9 +52,11 @@ dependencyManagement {
 }
 
 dependencies {
-    generatedCompile group: 'org.springframework', name: 'spring-web'
-    generatedCompile group: 'javax.validation', name: 'validation-api'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger2'
+    generatedCompile group: 'org.springframework', name: 'spring-web', version: '5.1.5.RELEASE'
+    generatedCompile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    generatedCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    generatedCompile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '9.0.16'
 }
 
 project.ext {
