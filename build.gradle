@@ -3,6 +3,7 @@ import io.swagger.codegen.config.CodegenConfigurator
 
 buildscript {
     repositories {
+        mavenLocal()
         jcenter()
     }
     dependencies {
@@ -19,7 +20,7 @@ plugins {
 }
 
 
-version = '2.7.2'
+version = '2.7.3'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -34,6 +35,7 @@ tasks.withType(JavaCompile) {
 }
 
 repositories {
+    mavenLocal()
     maven {
         url 'https://dl.bintray.com/hmcts/hmcts-maven'
     }
@@ -69,11 +71,29 @@ def generateCodeFromSwagger(swaggerSourceFile) {
     config.setAdditionalProperties([
             'generateApis'                 : 'false',
             'interfaceOnly'                : 'true',
-            'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api',
-            'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.model',
+            'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api.internal',
+            'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.internal.model',
             'sourceFolder'                 : project.swaggerTargetFolder,
             'dateLibrary'                  : 'java8',
             'generateModelDocumentation'   : 'false'
+    ])
+    new DefaultGenerator().opts(config.toClientOptInput()).generate()
+}
+
+def generateCodeFromSwaggerUserMgmt(swaggerSourceFile) {
+    def config = new CodegenConfigurator()
+    config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
+    config.setOutputDir("$buildDir")
+    config.setLang('spring')
+    config.setAdditionalProperties([
+            'generateApis'                 : 'false',
+            'interfaceOnly'                : 'true',
+            'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api.external',
+            'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.external.model',
+            'sourceFolder'                 : project.swaggerTargetFolder,
+            'dateLibrary'                  : 'java8',
+            'generateModelDocumentation'   : 'false',
+            'useTags'                      : 'true'
     ])
     new DefaultGenerator().opts(config.toClientOptInput()).generate()
 }
@@ -82,7 +102,8 @@ task generateApi {
     outputs.dir("$buildDir")
     doLast{
         generateCodeFromSwagger('src/main/resources/api.yaml')
-        generateCodeFromSwagger('src/main/resources/public-editor-api.yaml')
+        //generateCodeFromSwagger('src/main/resources/public-editor-api.yaml')
+        generateCodeFromSwaggerUserMgmt('src/main/resources/user-management-api.yaml')
     }
 }
 
