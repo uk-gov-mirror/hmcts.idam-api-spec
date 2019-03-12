@@ -1,0 +1,437 @@
+swagger: '2.0'
+info:
+  version: 1.0.13
+  title: User Management API v1.0
+  description: >-
+  basePath: /api/v1
+ssecurityDefinitions:
+  auth:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: /login
+    tokenUrl: /oauth2/token
+    scopes:
+      manage-user: allows modifying a User resource
+
+paths:
+  /api/v1/users/registration:
+    post:
+      tags:
+        - "user-management"
+      operationId: "Registration"
+      description: "Self register a user via a 3rd party registration process."
+      parameters:
+      - in: header
+        name: authorization
+        description: The access token associated to the session
+        required: true
+        type: string
+      - in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/UserRegistrationRequest'
+      responses:
+        201:
+          description: Registration accepted
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have create-user scope.
+        409:
+          description: User with this email already exists.
+        400:
+          description: Required parameters are missing or invalid.
+  /api/v1/users/{userId}:
+    get:
+      tags:
+        - "user-management"
+      description: Get the user details given their userId.
+      summary: getUserByUserid
+      operationId: GetUserByUserId
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: The userId of the user to be found (e.g. 'f65bd0f5-e733-4f4a-9ed4-901444ece494')
+      responses:
+        200:
+          description: The details of the requested user
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
+        404:
+          description: The user does not exist.
+        500:
+          description: An error occurred while retrieving the user details.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+    patch:
+      tags:
+        - "user-management"
+      description: 'Update the user details.  '
+      summary: updateUserDetails
+      operationId: UpdateUserDetails
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: The userId of the user to be updated
+        - name: body
+          in: body
+          required: true
+          description: the body of the User JSON object containing the fields to update.
+          schema:
+            $ref: '#/definitions/User'
+      responses:
+        200:
+          description: User updated successfully.
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
+        404:
+          description: The user to be updated could not be found.
+        500:
+          description: An error occurred while updating the user details.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+    delete:
+      tags:
+        - "user-management"
+      description: 'Delete the user.'
+      summary: deleteUser
+      operationId: deleteUserByUserId
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: The userId of the user to be deleted
+      responses:
+        204:
+          description: User deleted successfully.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
+        400:
+          description: Required parameters are missing or invalid.
+        404:
+          description: The user to be deleted could not be found.
+        500:
+          description: An error occurred while deleting the user.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+  /api/v1/users/{userId}/roles:
+    post:
+      tags:
+        - "user-management"
+      operationId: grantRolesToUser
+      summary: Grants one or more roles to the user
+      description: >-
+        Grants one or more roles to the user. The role(s) must exist in ForgeRock for the operation to be successful.
+      produces:
+        - application/json
+      parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
+        - in: path
+          name: userId
+          type: string
+          required: true
+          description: The userId of the user to be updated
+        - in: body
+          name: request
+          required: true
+          description: the body of the User JSON object containing the fields to update.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RoleDefinition'
+      responses:
+        201:
+          description: Role granted successfully
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
+        404:
+          description: The user to be updated could not be found.
+        500:
+          description: An error occurred while updating the user details. This may mean that the role to be assigned does not exist.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+    put:
+      tags:
+        - "user-management"
+      operationId: replacesRolesGrants
+      summary: Replaces the entire set of role grants to the user
+      description: >-
+        Grants one or more roles to the user. The role(s) must exist in ForgeRock for the operation to be successful.
+      parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
+        - in: path
+          name: userId
+          type: string
+          required: true
+          description: "The userId of the user to be updated"
+        - in: body
+          name: request
+          required: true
+          description: the body of the User JSON object containing the fields to update.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/RoleDefinition'
+      responses:
+        201:
+          description: Role grants replaced successfully.
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
+        404:
+          description: The user to be updated could not be found.
+        500:
+          description: An error occurred while updating the user details. This may mean that the role to be assigned does not exist.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+  /api/v1/users/{userId}/roles/{roleId}:
+    delete:
+      tags:
+        - "user-management"
+      operationId: denyRoleToUser
+      summary: Removes a role from the user
+      description: Removes a role from a user. The role must exist in ForgeRock for the operation to be successful.
+      parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
+        - in: path
+          name: userId
+          type: string
+          required: true
+          description: The id of the user
+        - in: path
+          name: roleId
+          type: string
+          required: true
+          description: The id of the role
+      responses:
+        204:
+          description: The role has been revoked successfully from the user.
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-user scope.
+        404:
+          description: The user or the role does not exist.
+        500:
+          description: An error occurred while updating the user details.
+          schema:
+            $ref: '#/definitions/ErrorMap'
+      security:
+        - auth:
+            - manage-user
+  /account/role:
+    post:
+      tags:
+        - "account-management"
+      operationId: "assignUserToRole"
+      description: "Assign the authenticated user to a role. The role is unique identified by its name."
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is assigned to
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/RoleDefinition'
+      responses:
+        201:
+          description: The role assignment is successful.
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-role scope.
+        412:
+          description: User is already assigned to this role or the role does not exist
+    delete:
+      tags:
+        - "account-management"
+      operationId: "unassignUserFromRole"
+      description: "Removes the assignment of the authenticated user to the role, uniquely identified by its name."
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is unassigned from
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/RoleDefinition'
+      responses:
+        200:
+          description: The role assignment is successfully removed.
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token
+        403:
+          description: Bearer token is expired or does not have manage-role scope.
+        412:
+          description: User is not assigned to this role or the role does not exist.
+definitions:
+  UserRegistrationRequest:
+    type: object
+    properties:
+      email:
+        type: string
+        format: email
+        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        description: "email used for registration"
+      firstName:
+        type: string
+        minLength: 1
+        description: "first name"
+      lastName:
+        type: string
+        minLength: 1
+        description: "last name"
+      roles:
+        type: array
+        items:
+          type: string
+        description: "The names of the roles to be assigned to the user"
+    required: [email, firstname, lastname]
+  RoleDefinition:
+    type: object
+    properties:
+      name:
+        type: string
+        minLength: 1
+        description: "Unique name of the role"
+    required: [name]
+  User:
+    title: User
+    type: object
+    properties:
+      id:
+        description: Unique ID for the user
+        type: string
+      forename:
+        description: The first name of the user
+        type: string
+        minLength: 1
+      surname:
+        description: The last name of the user
+        type: string
+        minLength: 1
+      email:
+        description: The email of the user
+        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        type: string
+      active:
+        description: Flag indicating whether the user is active (false means the user is suspended).
+        type: boolean
+      locked:
+        readOnly: true
+        description: Flag indicating whether the user is locked (false means the user is active).
+        type: boolean
+      roles:
+        description: The list of the roles of the user
+        type: array
+        items:
+          type: string
+  ErrorMap:
+    title: ErrorMap
+    example:
+      code: 403
+      description: something went wrong
+    type: object
+    properties:
+      code:
+        description: The error code
+        type: string
+      description:
+        description: The description of the error
+        type: string
+    required:
+      - code
