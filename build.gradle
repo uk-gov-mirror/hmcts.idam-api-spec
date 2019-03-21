@@ -19,7 +19,7 @@ plugins {
 }
 
 
-version = '2.7.3'
+version = '2.7.4'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -47,16 +47,17 @@ configurations {
 
 dependencyManagement {
     imports {
-        mavenBom 'uk.gov.hmcts.reform.idam:idam-bom:1.4.10'
+        mavenBom 'uk.gov.hmcts.reform.idam:idam-bom:1.5.0'
     }
 }
 
 dependencies {
-    generatedCompile group: 'org.springframework', name: 'spring-web', version: '5.1.5.RELEASE'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger2'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger-ui'
     generatedCompile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    generatedCompile group: 'javax.servlet', name: 'servlet-api', version: '2.5'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    generatedCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+    generatedCompile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
 }
 
 project.ext {
