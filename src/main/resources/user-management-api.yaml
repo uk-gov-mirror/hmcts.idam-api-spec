@@ -3,34 +3,39 @@ info:
   version: 1.0.13
   title: User Management API v1.0
   description: >-
-  basePath: /api/v1
-ssecurityDefinitions:
+basePath: /api/v1
+tags:
+  - name: User Management
+  - name: User Role Management
+  - name: Account Management
+securityDefinitions:
   auth:
     type: oauth2
     flow: accessCode
-    authorizationUrl: /login
-    tokenUrl: /oauth2/token
+    authorizationUrl: http://authserver/login
+    tokenUrl: http://authserver/oauth2/token
     scopes:
       manage-user: allows modifying a User resource
 
+
 paths:
-  /api/v1/users/registration:
+  /users/registration:
     post:
       tags:
-        - "user-management"
+        - User Management
       operationId: "Registration"
       description: "Self register a user via a 3rd party registration process."
       parameters:
-      - in: header
-        name: authorization
-        description: The access token associated to the session
-        required: true
-        type: string
-      - in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/UserRegistrationRequest'
+        - in: header
+          name: authorization
+          description: The access token associated to the session
+          required: true
+          type: string
+        - in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/UserRegistrationRequest'
       responses:
         201:
           description: Registration accepted
@@ -42,10 +47,10 @@ paths:
           description: User with this email already exists.
         400:
           description: Required parameters are missing or invalid.
-  /api/v1/users/{userId}:
+  /users/{userId}:
     get:
       tags:
-        - "user-management"
+        - User Management
       description: Get the user details given their userId.
       summary: getUserByUserid
       operationId: GetUserByUserId
@@ -85,8 +90,8 @@ paths:
             - manage-user
     patch:
       tags:
-        - "user-management"
-      description: 'Update the user details.  '
+        - User Management
+      description: 'Update the user details.'
       summary: updateUserDetails
       operationId: UpdateUserDetails
       deprecated: false
@@ -131,7 +136,7 @@ paths:
             - manage-user
     delete:
       tags:
-        - "user-management"
+        - User Management
       description: 'Delete the user.'
       summary: deleteUser
       operationId: deleteUserByUserId
@@ -167,10 +172,10 @@ paths:
       security:
         - auth:
             - manage-user
-  /api/v1/users/{userId}/roles:
+  /users/{userId}/roles:
     post:
       tags:
-        - "user-management"
+        - User Role Management
       operationId: grantRolesToUser
       summary: Grants one or more roles to the user
       description: >-
@@ -216,7 +221,7 @@ paths:
             - manage-user
     put:
       tags:
-        - "user-management"
+        - User Role Management
       operationId: replacesRolesGrants
       summary: Replaces the entire set of role grants to the user
       description: >-
@@ -258,10 +263,10 @@ paths:
       security:
         - auth:
             - manage-user
-  /api/v1/users/{userId}/roles/{roleId}:
+  /users/{userId}/roles/{roleId}:
     delete:
       tags:
-        - "user-management"
+        - User Role Management
       operationId: denyRoleToUser
       summary: Removes a role from the user
       description: Removes a role from a user. The role must exist in ForgeRock for the operation to be successful.
@@ -302,7 +307,7 @@ paths:
   /account/role:
     post:
       tags:
-        - "account-management"
+        - Account Management
       operationId: "assignUserToRole"
       description: "Assign the authenticated user to a role. The role is unique identified by its name."
       parameters:
@@ -331,7 +336,7 @@ paths:
           description: User is already assigned to this role or the role does not exist
     delete:
       tags:
-        - "account-management"
+        - Account Management
       operationId: "unassignUserFromRole"
       description: "Removes the assignment of the authenticated user to the role, uniquely identified by its name."
       parameters:
@@ -381,57 +386,3 @@ definitions:
           type: string
         description: "The names of the roles to be assigned to the user"
     required: [email, firstname, lastname]
-  RoleDefinition:
-    type: object
-    properties:
-      name:
-        type: string
-        minLength: 1
-        description: "Unique name of the role"
-    required: [name]
-  User:
-    title: User
-    type: object
-    properties:
-      id:
-        description: Unique ID for the user
-        type: string
-      forename:
-        description: The first name of the user
-        type: string
-        minLength: 1
-      surname:
-        description: The last name of the user
-        type: string
-        minLength: 1
-      email:
-        description: The email of the user
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
-        type: string
-      active:
-        description: Flag indicating whether the user is active (false means the user is suspended).
-        type: boolean
-      locked:
-        readOnly: true
-        description: Flag indicating whether the user is locked (false means the user is active).
-        type: boolean
-      roles:
-        description: The list of the roles of the user
-        type: array
-        items:
-          type: string
-  ErrorMap:
-    title: ErrorMap
-    example:
-      code: 403
-      description: something went wrong
-    type: object
-    properties:
-      code:
-        description: The error code
-        type: string
-      description:
-        description: The description of the error
-        type: string
-    required:
-      - code
