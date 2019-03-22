@@ -1268,63 +1268,6 @@ paths:
 
 definitions:
 
-  RegisterRequest:
-    type: object
-    properties:
-      email:
-        type: string
-        format: email
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
-        description: "email used for registration"
-      password:
-        type: string
-        description: "password used for login"
-      firstname:
-        type: string
-        description: "first name"
-      lastname:
-        type: string
-        description: "last name"
-      roles:
-        type: array
-        items:
-          type: string
-        description: "roles to grant"
-      services:
-        type: array
-        items:
-          type: string
-        description: "services to onboard"
-    required: [email, firstname, lastname]
-
-  SelfRegisterRequest:
-    type: object
-    properties:
-      email:
-        type: string
-        format: email
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
-        description: "email used for registration"
-      firstName:
-        type: string
-        description: "first name"
-      lastName:
-        type: string
-        description: "last name"
-      redirectUri:
-        type: string
-        decription: "URI to redirect the user to after successful account activation. This URL
-        must match one of the registered URLs for the OAuth2 application linked to the service
-        initiating the registration journey."
-      clientId:
-        type: string
-        description: "The service client ID"
-      state:
-        type: string
-        description: "Optional state reference that will be added to the redirect URL and be
-        available for the target system after the user is activated"
-    required: [email, firstname, lastname]
-
   ValidateRequest:
       type: object
       properties:
@@ -1413,53 +1356,6 @@ definitions:
         type: string
         description: Last name to be linked to the newly generated PIN
     required: [firstName, lastName]
-
-  ArrayOfRoles:
-    type: array
-    items:
-      $ref: '#/definitions/Role'
-
-  Role:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Unique ID for the role
-      name:
-        type: string
-        description: The name of the role
-      description:
-        type: string
-        description: The description of the role
-      assignableRoles:
-        type: array
-        items:
-          type: string
-        description: An array of roleIds representing assignable roles
-      conflictingRoles:
-        type: array
-        items:
-          type: string
-          description: An array of roleIds representing conflicting roles
-    required: [assignableRoles, conflictingRoles]
-
-  UpdateRole:
-    type: object
-    properties:
-      description:
-        type: string
-        description: The description of the role
-      assignableRoles:
-        type: array
-        items:
-          type: string
-        description: An array of roleIds representing assignable roles
-      conflictingRoles:
-        type: array
-        items:
-          type: string
-          description: An array of roleIds representing conflicting roles
-    required: [description, assignableRoles, conflictingRoles]
 
   Service:
     type: object
@@ -1557,32 +1453,6 @@ definitions:
         description: The allowed redirect URIs
     required: [clientId, clientPassword, redirectUris]
 
-  User:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Unique ID for the user
-      forename:
-        type: string
-        description: The first name of the user
-      surname:
-        type: string
-        description: The last name of the user
-      email:
-        type: string
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
-        description: The email of the user
-      accountStatus:
-        type: string
-        description: The account status of the user
-      roles:
-        type: array
-        description: The list of the roles of the user
-        items:
-          type: string
-    required: [id, forename, surname, email]
-
   Pin:
     type: object
     properties:
@@ -1609,30 +1479,6 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/Service'
-
-  ArrayOfStrings:
-    type: array
-    items:
-      type: string
-
-  ErrorMap:
-    type: object
-    properties:
-      code:
-        type: string
-        description: The error code
-      description:
-        type: string
-        description: The description of the error
-    required: [code]
-
-  RoleDetail:
-    type: object
-    properties:
-      code:
-        type: string
-        description: the role code
-    required: [code]
 
   TestUserRequest:
     type: object

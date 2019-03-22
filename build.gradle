@@ -19,7 +19,7 @@ plugins {
 }
 
 
-version = '2.7.4'
+version = '2.8.0'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -64,7 +64,7 @@ project.ext {
     swaggerTargetFolder = 'src/generated/java'
 }
 
-def generateCodeFromSwagger(swaggerSourceFile) {
+def generateCodeFromSwagger(swaggerSourceFile, packageName, importMappings) {
     def config = new CodegenConfigurator()
     config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
     config.setOutputDir("$buildDir")
@@ -72,20 +72,43 @@ def generateCodeFromSwagger(swaggerSourceFile) {
     config.setAdditionalProperties([
             'generateApis'                 : 'false',
             'interfaceOnly'                : 'true',
-            'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api',
-            'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.model',
+            'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api.' + packageName,
+            'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.' + packageName +'.model',
             'sourceFolder'                 : project.swaggerTargetFolder,
             'dateLibrary'                  : 'java8',
+            'useTags'                      : (packageName == 'external' ? 'true' : 'false'),
             'generateModelDocumentation'   : 'false'
     ])
+    if (importMappings != null) {
+        ((LinkedHashMap<String, String>) importMappings).each { k, v -> config.addImportMapping(k, v) }
+    }
     new DefaultGenerator().opts(config.toClientOptInput()).generate()
 }
 
 task generateApi {
     outputs.dir("$buildDir")
     doLast{
-        generateCodeFromSwagger('src/main/resources/api.yaml')
-        generateCodeFromSwagger('src/main/resources/public-editor-api.yaml')
+        generateCodeFromSwagger('src/main/resources/shared.yaml', 'shared', null)
+
+        generateCodeFromSwagger('src/main/resources/internal-admin-api.yaml', 'internal', [
+                'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
+                'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap',
+                'ArrayOfRoles' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfRoles',
+                'Role' : 'uk.gov.hmcts.reform.idam.api.shared.model.Role',
+                'ArrayOfStrings' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfStrings',
+                'RoleDetail' : 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDetail',
+                'UpdateRole' : 'uk.gov.hmcts.reform.idam.api.shared.model.UpdateRole',
+                'PatchRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.PatchRequest',
+                'PatchOperation' : 'uk.gov.hmcts.reform.idam.api.shared.model.PatchOperation',
+                'RegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.RegisterRequest',
+                'SelfRegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.SelfRegisterRequest'
+        ])
+
+        generateCodeFromSwagger('src/main/resources/external-user-mgmt-api.yaml', 'external', [
+                'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition',
+                'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
+                'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap'
+        ])
     }
 }
 
