@@ -3,7 +3,7 @@ import io.swagger.codegen.config.CodegenConfigurator
 
 buildscript {
     repositories {
-        mavenLocal()
+        //mavenLocal()
         jcenter()
     }
     dependencies {
@@ -35,7 +35,7 @@ tasks.withType(JavaCompile) {
 }
 
 repositories {
-    mavenLocal()
+    //mavenLocal()
     maven {
         url 'https://dl.bintray.com/hmcts/hmcts-maven'
     }
@@ -92,7 +92,7 @@ task generateApi {
     doLast{
         generateCodeFromSwagger('src/main/resources/shared.yaml', 'shared', null)
 
-        generateCodeFromSwagger('src/main/resources/api.yaml', 'internal', [
+        generateCodeFromSwagger('src/main/resources/internal-admin-api.yaml', 'internal', [
                 'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
                 'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap',
                 'ArrayOfRoles' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfRoles',
@@ -105,8 +105,8 @@ task generateApi {
                 'RegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.RegisterRequest',
                 'SelfRegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.SelfRegisterRequest'
         ])
-        //generateCodeFromSwagger('src/main/resources/public-editor-api.yaml')
-        generateCodeFromSwagger('src/main/resources/user-management-api.yaml', 'external', [
+
+        generateCodeFromSwagger('src/main/resources/external-user-mgmt-api.yaml', 'external', [
                 'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition',
                 'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
                 'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap'
