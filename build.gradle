@@ -3,7 +3,6 @@ import io.swagger.codegen.config.CodegenConfigurator
 
 buildscript {
     repositories {
-        //mavenLocal()
         jcenter()
     }
     dependencies {
@@ -35,7 +34,6 @@ tasks.withType(JavaCompile) {
 }
 
 repositories {
-    //mavenLocal()
     maven {
         url 'https://dl.bintray.com/hmcts/hmcts-maven'
     }
