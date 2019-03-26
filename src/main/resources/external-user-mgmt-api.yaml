@@ -81,10 +81,6 @@ paths:
           description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user does not exist.
-        500:
-          description: An error occurred while retrieving the user details.
-          schema:
-            $ref: '#/definitions/ErrorMap'
       security:
         - auth:
             - manage-user
@@ -127,10 +123,6 @@ paths:
           description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user to be updated could not be found.
-        500:
-          description: An error occurred while updating the user details.
-          schema:
-            $ref: '#/definitions/ErrorMap'
       security:
         - auth:
             - manage-user
@@ -165,10 +157,6 @@ paths:
           description: Required parameters are missing or invalid.
         404:
           description: The user to be deleted could not be found.
-        500:
-          description: An error occurred while deleting the user.
-          schema:
-            $ref: '#/definitions/ErrorMap'
       security:
         - auth:
             - manage-user
@@ -205,17 +193,13 @@ paths:
         201:
           description: Role granted successfully
         400:
-          description: Required parameters are missing or invalid.
+          description: The user is already assigned to this role or the role does not exist.
         401:
-          description: Missing bearer token
+          description: Missing bearer token.
         403:
           description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user to be updated could not be found.
-        500:
-          description: An error occurred while updating the user details. This may mean that the role to be assigned does not exist.
-          schema:
-            $ref: '#/definitions/ErrorMap'
       security:
         - auth:
             - manage-user
@@ -249,17 +233,13 @@ paths:
         201:
           description: Role grants replaced successfully.
         400:
-          description: Required parameters are missing or invalid.
+          description: One of the roles to assing does not exist.
         401:
           description: Missing bearer token
         403:
           description: Bearer token is expired or does not have manage-user scope.
         404:
           description: The user to be updated could not be found.
-        500:
-          description: An error occurred while updating the user details. This may mean that the role to be assigned does not exist.
-          schema:
-            $ref: '#/definitions/ErrorMap'
       security:
         - auth:
             - manage-user
@@ -290,17 +270,13 @@ paths:
         204:
           description: The role has been revoked successfully from the user.
         400:
-          description: Required parameters are missing or invalid.
+          description: The user is not assigned to this role.
         401:
           description: Missing bearer token
         403:
           description: Bearer token is expired or does not have manage-user scope.
         404:
-          description: The user or the role does not exist.
-        500:
-          description: An error occurred while updating the user details.
-          schema:
-            $ref: '#/definitions/ErrorMap'
+          description: The user or the role do not exist.
       security:
         - auth:
             - manage-user
