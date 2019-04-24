@@ -1181,6 +1181,12 @@ paths:
     delete:
       operationId: "deleteAllTestData"
       description: "Delete all test data"
+      parameters:
+        - in: query
+          name: testDataPrefix
+          type: string
+          required: false
+          description: "Prefix for test data names"
       responses:
         200:
           description: "Test data deleted OK"
