@@ -1177,15 +1177,15 @@ paths:
         409:
           description: "The user already exists."
 
-  /testing-support/test-data/{testDataPrefix:.+}:
+  /testing-support/test-data:
     delete:
       operationId: "deleteAllTestData"
       description: "Delete all test data"
       parameters:
-        - in: path
+        - in: query
           name: testDataPrefix
           type: string
-          required: true
+          required: false
           description: "Prefix for test data names"
       responses:
         200:
