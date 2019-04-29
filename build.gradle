@@ -19,7 +19,7 @@ plugins {
 }
 
 
-version = '2.8.2'
+version = '2.8.3'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -108,6 +108,10 @@ task generateApi {
                 'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition',
                 'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
                 'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap'
+        ])
+
+        generateCodeFromSwagger('src/main/resources/external-dynamic-role-assign-api.yaml', 'external', [
+                'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition'
         ])
     }
 }

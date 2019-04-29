@@ -7,7 +7,6 @@ basePath: /api/v1
 tags:
   - name: User Management
   - name: User Role Management
-  - name: Account Management
 securityDefinitions:
   auth:
     type: oauth2
@@ -16,7 +15,6 @@ securityDefinitions:
     tokenUrl: http://authserver/oauth2/token
     scopes:
       manage-user: allows modifying a User resource
-
 
 paths:
   /users/registration:
@@ -281,67 +279,7 @@ paths:
       security:
         - auth:
             - manage-user
-  /account/role:
-    post:
-      tags:
-        - Account Management
-      operationId: assignUserToRole
-      description: Assign the authenticated user to a role. The role is unique identified by its name.
-      parameters:
-        - in: header
-          name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
-          required: true
-          type: string
-        - in: body
-          name: request
-          required: true
-          description: the body of the User JSON object containing the fields to update.
-          schema:
-            $ref: '#/definitions/RoleDefinition'
-      responses:
-        201:
-          description: The role assignment is successful.
-        400:
-          description: Required parameters are missing or invalid.
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired or does not have 'manage-role' scope.
-        412:
-          description: User is already assigned to this role or the role does not exist.
-    delete:
-      tags:
-        - Account Management
-      operationId: unassignUserFromRole
-      description: Removes the assignment of the authenticated user to the role, uniquely identified by its name.
-      parameters:
-        - in: header
-          name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is unassigned from
-            the user the client application is acting on behalf of.
-          required: true
-          type: string
-        - in: body
-          name: request
-          required: true
-          description: the body of the User JSON object containing the fields to update.
-          schema:
-            $ref: '#/definitions/RoleDefinition'
-      responses:
-        200:
-          description: The role assignment is successfully removed.
-        400:
-          description: Required parameters are missing or invalid.
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired or does not have 'manage-role' scope.
-        412:
-          description: User is not assigned to this role or the role does not exist.
+
 definitions:
   UserRegistrationRequest:
     type: object
