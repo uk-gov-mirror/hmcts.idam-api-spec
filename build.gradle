@@ -88,6 +88,8 @@ def generateCodeFromSwagger(swaggerSourceFile, packageName, importMappings) {
 task generateApi {
     outputs.dir("$buildDir")
     doLast{
+        generateCodeFromSwagger('src/main/resources/openid-connect.yaml', 'external', null)
+
         generateCodeFromSwagger('src/main/resources/shared.yaml', 'shared', null)
 
         generateCodeFromSwagger('src/main/resources/internal-admin-api.yaml', 'internal', [
