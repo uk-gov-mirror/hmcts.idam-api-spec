@@ -15,7 +15,7 @@ paths:
   /oauth2/authorize:
     get:
       summary: 'Browser OpenID Connect Authorize'
-      operationId: oauth2_authorize
+      operationId: _oauth2_authorize
       description: Initiate an OpenID Connect Authorization flow
       parameters:
         - name: client_id
@@ -137,7 +137,7 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
         401:
-          description: Username password combination not found
+          description: Username/Client_id password combination not found
           schema:
             $ref: '#/definitions/ErrorResponse'
         403:
@@ -151,7 +151,7 @@ paths:
       tags:
         - OpenID Connect
 
-  /oauth2/access_token:
+  /oauth2/token:
     post:
       summary: Request Access Token
       operationId: _access_token
@@ -227,8 +227,14 @@ paths:
           description: One or more required parameters are invalid
           schema:
             $ref: '#/definitions/ErrorResponse'
-        403:
-          description: 'Username password combination not found'
+        401:
+          description: Username/Client_id password combination not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        404:
+          description: client_id was not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
 
   /oauth2/userinfo:
     post:
@@ -237,8 +243,6 @@ paths:
       description: |
         Partner makes a request to the userinfo endpoint by adding the
         following parameters describerd below
-      consumes:
-        - application/x-www-form-urlencoded
       produces:
         - application/json
       parameters:
@@ -255,7 +259,9 @@ paths:
           schema:
             $ref: '#/definitions/InfoResponse'
         '401':
-          description: 'The supplied authorization is invalid or has expired.'
+          description: The supplied authorization is invalid or has expired.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
 
 definitions:
   ErrorResponse:
