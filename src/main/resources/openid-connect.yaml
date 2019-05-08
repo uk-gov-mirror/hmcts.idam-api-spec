@@ -172,7 +172,9 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/InfoResponse'
+            type: object
+            additionalProperties:
+              type: object
         '401':
           description: The supplied authorization is invalid or has expired.
           schema:
@@ -223,10 +225,6 @@ definitions:
       detail:
         type: string
         description: Detailed error message
-  InfoResponse:
-    type: object
-    additionalProperties:
-      type: string
   TokenResponse:
     type: object
     properties:
