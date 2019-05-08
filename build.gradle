@@ -19,7 +19,7 @@ plugins {
 }
 
 
-version = '2.9.0'
+version = '2.10.0'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -88,6 +88,8 @@ def generateCodeFromSwagger(swaggerSourceFile, packageName, importMappings) {
 task generateApi {
     outputs.dir("$buildDir")
     doLast{
+        generateCodeFromSwagger('src/main/resources/openid-connect.yaml', 'external', null)
+
         generateCodeFromSwagger('src/main/resources/shared.yaml', 'shared', null)
 
         generateCodeFromSwagger('src/main/resources/internal-admin-api.yaml', 'internal', [

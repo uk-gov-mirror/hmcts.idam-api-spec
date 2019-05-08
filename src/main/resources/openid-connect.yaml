@@ -1,0 +1,257 @@
+swagger: '2.0'
+info:
+  title: SIDAM OpenID Connect 1.0 Endpoints
+  description: Endpoints defined in the OIDC/OAuth2 Specification
+  version: '1.0.0'
+schemes:
+  - http
+  - https
+tags:
+  - name: OpenID Connect
+produces:
+  - application/json
+basePath: /o
+paths:
+  /authorize:
+    get:
+      summary: 'Browser OpenID Connect Authorize'
+      operationId: _oauth2_authorize
+      description: Initiate an OpenID Connect Authorization flow
+      parameters:
+        - name: client_id
+          in: query
+          required: false
+          description: OAuth2 client id of the service initiating the OAuth2 flow.
+          type: string
+        - name: redirect_uri
+          in: query
+          required: false
+          description: |
+            URI to redirect the user to after successful authentication. This URL
+            must match one of the registered URLs for the OAuth2 application linked to the service
+            initiating the authentication flow.
+          type: string
+        - name: state
+          in: query
+          required: false
+          description: Optional state to be sent back to the initiating service after successful authentication.
+          type: string
+        - name: nonce
+          in: query
+          required: false
+          description: Optional parameter required for openid hybrid flow requests.
+          type: string
+        - name: response_type
+          in: query
+          required: false
+          description: Response type to use for this request
+          type: string
+          default: code
+        - name: scope
+          in: query
+          required: false
+          description: Optional scopes to request.
+          type: string
+      responses:
+        302:
+          headers:
+            Location:
+              type: string
+              description: |
+                The URL that the Resource Owner must be redirected to.
+                This will be the login page or an error page if a parameter
+                was omitted or incorrect
+          description: Redirection to login page successful.
+        400:
+          description: Request is invalid. One or more required parameters may have been omitted
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        404:
+          description: client_id not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - OpenID Connect
+
+  /token:
+    post:
+      summary: Request Access Token
+      operationId: _access_token
+      description: |
+        Partner makes a request to the token endpoint by adding the
+        following parameters described below
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - name: grant_type
+          in: formData
+          description: The OAuth2 Grant Type
+          required: true
+          type: string
+        - name: code
+          in: formData
+          description: |
+            OAuth2 code returned by the /authorize call.
+            Required when grant_type=authorization_code
+          required: false
+          type: string
+        - name: redirect_uri
+          in: formData
+          description: |
+            URI to redirect the user to after successful authentication. This URL
+            must match one of the registered URLs for the OAuth2 application linked to the service
+            initiating the authentication flow.
+          required: false
+          type: string
+        - name: client_id
+          in: formData
+          description: OAuth2 client id of the service initiating the OAuth2 flow.
+          required: false
+          type: string
+        - name: client_secret
+          in: formData
+          description: OAuth2 client sercret of the service initiating the OAuth2 flow.
+          required: false
+          type: string
+        - name: scope
+          in: formData
+          description: The required scopes for the access token
+          required: false
+          type: string
+        - name: username
+          in: formData
+          description: The username of the user for implicit grant_type of Password
+          required: false
+          type: string
+        - name: password
+          in: formData
+          description: The password of the user for implicit grant_type of Password
+          required: false
+          type: string
+      tags:
+        - OpenID Connect
+      responses:
+        200:
+          description: Authorization token
+          schema:
+            $ref: '#/definitions/TokenResponse'
+        400:
+          description: One or more required parameters are invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        401:
+          description: Username/Client_id password combination not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        404:
+          description: client_id was not found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /userinfo:
+    get:
+      summary: Request Info For User of the Authorization token
+      operationId: get_user_info
+      description: |
+        Partner makes a request to the userinfo endpoint by adding the
+        following parameters describerd below
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - name: claims
+          in: query
+          required: false
+          type: string
+      tags:
+        - OpenID Connect
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '401':
+          description: The supplied authorization is invalid or has expired.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      summary: Request Info For User of the Authorization token
+      operationId: _user_info
+      description: |
+        Partner makes a request to the userinfo endpoint by adding the
+        following parameters describerd below
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - name: claims
+          in: query
+          required: false
+          type: string
+      tags:
+        - OpenID Connect
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            additionalProperties:
+              type: object
+        '401':
+          description: The supplied authorization is invalid or has expired.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+definitions:
+  ErrorResponse:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+        description: 3-digit code corresponding to HTTP status codes
+      message:
+        type: string
+        description: Error message
+      reason:
+        type: string
+        description: Short description corresponding to HTTP status code
+      detail:
+        type: string
+        description: Detailed error message
+  TokenResponse:
+    type: object
+    properties:
+      access_token:
+        type: string
+        description: The access token
+      refresh_token:
+        type: string
+        description: The refresh token
+      scope:
+        type: string
+        description: The scopes of the token
+      id_token:
+        type: string
+        description: The ID Token
+      token_type:
+        type: string
+        description: The type of token eg "Bearer"
+      expires_in:
+        type: string
+        description: The lifetime in seconds of the access token
+
+parameters:
+  authorization:
+    name: Authorization
+    in: header
+    required: false
+    type: string
