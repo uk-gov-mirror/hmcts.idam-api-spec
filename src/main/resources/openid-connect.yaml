@@ -10,9 +10,9 @@ tags:
   - name: OpenID Connect
 produces:
   - application/json
-basePath: /oidc
+basePath: /o
 paths:
-  /oauth2/authorize:
+  /authorize:
     get:
       summary: 'Browser OpenID Connect Authorize'
       operationId: _oauth2_authorize
@@ -73,85 +73,7 @@ paths:
       tags:
         - OpenID Connect
 
-    post:
-      summary: 'OpenID Connect Authorize'
-      operationId: authorize
-      description: A direct OAuth2 grant request.
-      consumes:
-        - application/x-www-form-urlencoded
-      produces:
-        - application/json
-      parameters:
-        - name: Authorization
-          in: header
-          type: string
-          required: true
-          description: |
-                Uses Basic Authentication to identifying the principal making the request.
-                For example - 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='
-        - name: redirect_uri
-          in: formData
-          description: |
-                URI to redirect the user to after successful authentication. This URL
-                must match one of the registered URLs for the OAuth2 application linked to the service
-                initiating the authentication flow.
-          required: false
-          type: string
-        - name: client_id
-          in: formData
-          description: OAuth2 client id of the service initiating the OAuth2 flow.
-          required: false
-          type: string
-        - name: state
-          in: formData
-          description: Optional state to be sent back to the initiating service after successful authentication.
-          required: false
-          type: string
-        - name: nonce
-          in: formData
-          description: Optional parameter required for openid hybrid flow requests.
-          required: false
-          type: string
-        - name: scope
-          in: formData
-          description: Optional scopes to request.
-          required: false
-          type: string
-        - name: response_type
-          in: formData
-          description: Response type to use for this request
-          required: false
-          type: string
-      responses:
-        302:
-          headers:
-            Location:
-              type: string
-              description: |
-                The URL that the client should be redirected to.
-                This will be the pre-registered redirect_uri that was passed in,
-                along with the requested response type as a query parameter
-          description: Redirection to login page successful.
-        400:
-          description: Request is invalid. One or more required parameters may have been omitted
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        401:
-          description: Username/Client_id password combination not found
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        403:
-          description: The account is suspended or locked
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        404:
-          description: client_id not found
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      tags:
-        - OpenID Connect
-
-  /oauth2/token:
+  /token:
     post:
       summary: Request Access Token
       operationId: _access_token
@@ -169,13 +91,6 @@ paths:
           description: The OAuth2 Grant Type
           required: true
           type: string
-          enum:
-            - authorization_code
-            - implicit
-            - password
-            - refresh_token
-            - client_credentials
-            - jwt-bearer
         - name: code
           in: formData
           description: |
@@ -236,7 +151,32 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
 
-  /oauth2/userinfo:
+  /userinfo:
+    get:
+      summary: Request Info For User of the Authorization token
+      operationId: get_user_info
+      description: |
+        Partner makes a request to the userinfo endpoint by adding the
+        following parameters describerd below
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - name: claims
+          in: query
+          required: false
+          type: string
+      tags:
+        - OpenID Connect
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/InfoResponse'
+        '401':
+          description: The supplied authorization is invalid or has expired.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
     post:
       summary: Request Info For User of the Authorization token
       operationId: _user_info
