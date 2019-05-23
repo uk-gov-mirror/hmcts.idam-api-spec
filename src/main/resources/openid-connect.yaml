@@ -366,7 +366,268 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
 
+  /.well-known/openid-configuration:
+    get:
+      summary: 'Well Known OpenID Config'
+      operationId: _well_known_openid_configuration
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/WellKnownConfig'
+      tags:
+        - OpenID Connect
+      description: Returns information required for OIDC Discovery
+
 definitions:
+  WellKnownConfig:
+    type: object
+    title: OpenID Connect Well-Known Configuration Reponse
+    properties:
+      request_parameter_supported:
+        type: boolean
+        default: false
+        examples:
+          - true
+      claims_parameter_supported:
+        type: boolean
+        default: false
+        examples:
+          - false
+      introspection_endpoint:
+        type: string
+        examples:
+          - http://localhost:8080/o/introspect
+        pattern: "^(.*)$"
+      check_session_iframe:
+        type: string
+        examples:
+          - http://localhost:8080/o/checkSession
+      scopes_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - acr
+            - openid
+            - profile
+            - roles
+            - authorities
+            - email
+      issuer:
+        type: string
+        examples:
+          - http://localhost:8080/o/
+      id_token_encryption_enc_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - A256GCM
+            - A192GCM
+            - A128GCM
+            - A128CBC-HS256
+            - A192CBC-HS384
+            - A256CBC-HS512
+      acr_values_supported:
+        type: array
+        items:
+          type: string
+      authorization_endpoint:
+        type: string
+        examples:
+          - http://localhost:8080/o/authorize
+      request_object_encryption_enc_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - A256GCM
+            - A192GCM
+            - A128GCM
+            - A128CBC-HS256
+            - A192CBC-HS384
+            - A256CBC-HS512
+      rcs_request_encryption_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - RSA-OAEP
+            - RSA-OAEP-256
+            - A128KW
+            - RSA1_5
+            - A256KW
+            - dir
+            - A192KW
+      claims_supported:
+        type: array
+        items:
+          type: string
+      rcs_request_signing_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - ES384
+            - HS256
+            - HS512
+            - ES256
+            - RS256
+            - HS384
+            - ES512
+      token_endpoint_auth_methods_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - client_secret_post
+            - private_key_jwt
+            - client_secret_basic
+      token_endpoint:
+        type: string
+        examples:
+          - http://localhost:8080/o/access_token
+      response_types_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - code token id_token
+            - code
+            - code id_token
+            - device_code
+            - id_token
+            - code token
+            - token
+            - token id_token
+      request_uri_parameter_supported:
+        type: boolean
+        default: false
+        examples:
+          - true
+      rcs_response_encryption_enc_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - A256GCM
+            - A192GCM
+            - A128GCM
+            - A128CBC-HS256
+            - A192CBC-HS384
+            - A256CBC-HS512
+      end_session_endpoint:
+        type: string
+        default: ''
+        examples:
+          - http://localhost:8080/o/endSession
+      rcs_request_encryption_enc_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - A256GCM
+            - A192GCM
+            - A128GCM
+            - A128CBC-HS256
+            - A192CBC-HS384
+            - A256CBC-HS512
+      version:
+        type: string
+        examples:
+          - '3.0'
+      rcs_response_encryption_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - RSA-OAEP
+            - RSA-OAEP-256
+            - A128KW
+            - A256KW
+            - RSA1_5
+            - dir
+            - A192KW
+      userinfo_endpoint:
+        type: string
+        examples:
+          - http://localhost:8080/o/userinfo
+      id_token_encryption_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - RSA-OAEP
+            - RSA-OAEP-256
+            - A128KW
+            - A256KW
+            - RSA1_5
+            - dir
+            - A192KW
+      jwks_uri:
+        type: string
+        examples:
+          - http://localhost:8080/o/jwk_uri
+      subject_types_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - public
+      id_token_signing_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - ES384
+            - HS256
+            - HS512
+            - ES256
+            - RS256
+            - HS384
+            - ES512
+      registration_endpoint:
+        type: string
+        examples:
+          - http://localhost:8080/o/register
+      request_object_signing_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - ES384
+            - HS256
+            - HS512
+            - ES256
+            - RS256
+            - HS384
+            - ES512
+      request_object_encryption_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - RSA-OAEP
+            - RSA-OAEP-256
+            - A128KW
+            - RSA1_5
+            - A256KW
+            - dir
+            - A192KW
+      rcs_response_signing_alg_values_supported:
+        type: array
+        items:
+          type: string
+          examples:
+            - ES384
+            - HS256
+            - HS512
+            - ES256
+            - RS256
+            - HS384
+            - ES512
+
   ErrorResponse:
     type: object
     required:
@@ -378,6 +639,7 @@ definitions:
       error_description:
         type: string
         description: Human-readable ASCII encoded text description of the error
+
   TokenResponse:
     type: object
     properties:
