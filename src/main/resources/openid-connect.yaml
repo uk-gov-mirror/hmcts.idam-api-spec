@@ -439,8 +439,6 @@ paths:
       responses:
         204:
           description: Success
-          schema:
-            $ref: '#/definitions/Response'
         302:
           headers:
             Location:
