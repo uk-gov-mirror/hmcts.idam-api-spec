@@ -416,6 +416,48 @@ paths:
         - OpenID Connect
       description: Returns information required for OIDC Discovery
 
+  /endSession:
+    get:
+      summary: 'OpenID Connect End Session'
+      operationId: _end_session
+      parameters:
+        - name: id_token_hint
+          in: query
+          required: false
+          description: Users id token to help OP link the session
+          type: string
+        - name: post_logout_redirect_uri
+          in: query
+          required: false
+          description: Optional uri to redirect the user to after logout
+          type: string
+        - name: state
+          in: query
+          required: false
+          description: Optional application state parameter
+          type: string
+      responses:
+        204:
+          description: Success
+          schema:
+            $ref: '#/definitions/Response'
+        302:
+          headers:
+            Location:
+              type: string
+              description: |
+                The URL that the Resource Owner must be redirected to.
+                This is a pre-registered post logout URI that must match the client_id
+                of the audience of the id_token passed in as a hint.
+          description: End Session success. Redirecting to post logout URI
+        400:
+          description: One or more parameters are invalid
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      tags:
+        - OpenID Connect
+      description: Ends the session of the user
+
 definitions:
   WellKnownConfig:
     type: object
