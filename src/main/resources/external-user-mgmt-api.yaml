@@ -327,6 +327,10 @@ definitions:
   UserRegistrationRequest:
     type: object
     properties:
+      id:
+        type: string
+        format: uuid
+        description: "user unique ID (UID)"
       email:
         type: string
         format: email
