@@ -63,6 +63,9 @@ definitions:
         readOnly: true
         description: Flag indicating whether the user is locked (false means the user is active).
         type: boolean
+      pending:
+        description: Flag indicating whether the user is pending, i.e. registered but not activated yet.
+        type: boolean
       roles:
         description: The list of the roles of the user
         type: array
@@ -177,6 +180,10 @@ definitions:
   RegisterRequest:
     type: object
     properties:
+      id:
+        type: string
+        format: uuid
+        description: "user unique ID (UID)"
       email:
         type: string
         format: email
@@ -206,6 +213,10 @@ definitions:
   SelfRegisterRequest:
     type: object
     properties:
+      id:
+        type: string
+        format: uuid
+        description: "user unique ID (UID)"
       email:
         type: string
         format: email
