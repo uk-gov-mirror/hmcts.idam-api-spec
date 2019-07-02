@@ -295,7 +295,7 @@ paths:
         - auth:
             - manage-user
 
-  /users/{userId}/roles/{roleId}:
+  /users/{userId}/roles/{roleName}:
     delete:
       tags:
         - User Role Management
@@ -314,10 +314,10 @@ paths:
           required: true
           description: The id of the user.
         - in: path
-          name: roleId
+          name: roleName
           type: string
           required: true
-          description: The id of the role.
+          description: The name of the role to revoke.
       responses:
         204:
           description: The role has been revoked successfully from the user.
