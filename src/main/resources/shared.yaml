@@ -118,6 +118,11 @@ definitions:
         items:
           type: string
           description: An array of roleIds representing conflicting roles
+      linkedRoles:
+        type: array
+        items:
+          type: string
+          description: An array of roleIds representing roles that should be assigned to the user together with the main role
     required: [assignableRoles, conflictingRoles]
 
   UpdateRole:
