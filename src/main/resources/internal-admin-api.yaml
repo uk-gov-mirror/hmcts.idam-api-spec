@@ -1240,6 +1240,14 @@ paths:
         200:
           description: "Job started"
 
+  /testing-support/cache/refresh:
+    post:
+      operationId: "cacheRefresh"
+      description: "Refresh the cache"
+      response:
+        200:
+          description: "Job started"
+
 definitions:
 
   ValidateRequest:
