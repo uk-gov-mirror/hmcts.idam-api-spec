@@ -1102,7 +1102,23 @@ paths:
           schema:
             $ref: '#/definitions/JsonWebKeySet'
 
-  /testing-support/accounts:
+  /testing-support/accounts/{accountId:.+}:
+    get:
+      operationId: "getAccount"
+      description: "Fetch a test account via ID"
+      parameters:
+        - in: path
+          name: accountId
+          type: string
+          required: true
+          description: "The id of the user to invite"
+      responses:
+        200:
+          description: "The requested account was found and returned"
+          schema:
+            $ref: '#/definitions/Account'
+        404:
+          description: "The account doesn't exist."
     post:
       operationId: "createTestAccount"
       description: "Create a test account"
@@ -1277,6 +1293,43 @@ paths:
           description: "Job started"
 
 definitions:
+  Account:
+    title: Account
+    type: object
+    properties:
+      id:
+        description: Unique ID for the user
+        type: string
+      forename:
+        description: The first name of the user
+        type: string
+      surname:
+        description: The last name of the user
+        type: string
+      email:
+        description: The email of the user
+        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        type: string
+      active:
+        description: Flag indicating whether the user is active (false means the user is suspended).
+        type: boolean
+      locked:
+        readOnly: true
+        description: Flag indicating whether the user is locked (false means the user is active).
+        type: boolean
+      roles:
+        description: The list of the roles of the user
+        type: array
+        items:
+          type: string
+      linkedRoles:
+        description: Extra, usually hidden roles the user may have been granted
+        type: array
+        items:
+          type: string
+      lastModified:
+        description: The date and time this user was last modified.
+        type: string
 
   ValidateRequest:
     type: object
