@@ -18,7 +18,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.4'
 }
 
-version = '2.13.1'
+version = '2.14.0'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -112,6 +112,8 @@ task generateApi {
         generateCodeFromSwagger('src/main/resources/external-dynamic-role-assign-api.yaml', 'external', [
                 'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition'
         ])
+
+        generateCodeFromSwagger('src/main/resources/external-policies-api.yaml', 'external', null)
     }
 }
 
