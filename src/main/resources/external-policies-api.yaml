@@ -1,0 +1,108 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Policies API v1.0
+  description: >-
+basePath: /api/v1
+tags:
+  - name: Policy
+securityDefinitions:
+  auth:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: http://authserver/login
+    tokenUrl: http://authserver/oauth2/token
+    scopes:
+      manage-user: allows modifying a User resource
+paths:
+  /policies/evaluate:
+    post:
+      tags:
+        - Policy
+      operationId: evaluate
+      description: Evaluate policies
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is assigned to
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - in: body
+          name: request
+          required: true
+          schema:
+            type: object
+            required:
+              - application
+              - resources
+            properties:
+              resources:
+                type: array
+                items:
+                  type: string
+                title: Resources
+                description: Specifies the list of resources for which to return decisions
+              application:
+                type: string
+                title: Application
+                description: 'Holds the name of the application, and defaults to "iPlanetAMWebAgentService" if not specified'
+              subject:
+                type: object
+                properties:
+                  ssoToken:
+                    type: string
+                    title: SSOToken
+                    description: The value is the SSO token ID string for the subject
+                  jwt:
+                    type: string
+                    title: JWT
+                    description: The value is a JWT string
+                  claims:
+                    type: object
+                    title: Claims
+                    description: The value is an object (map) of JWT claims to their values.
+                title: Subject
+                description: 'Holds an object that represents the subject. You can specify one or more of the following keys. If you specify multiple keys, the subject can have multiple associated principals, and you can use subject conditions corresponding to any type in the request'
+              environment:
+                type: object
+                title: Environment
+                description: Holds a map of keys to lists of values
+            title: Evaluate Policies Request
+            description: Evaluate Policies Request
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/EvaluatePoliciesResponse'
+        400:
+          description: Required parameters are missing or invalid.
+        401:
+          description: Missing bearer token.
+        500:
+          description: Unexpected server error happened during the process
+definitions:
+  EvaluatePoliciesResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        resource:
+          type: string
+          title: Resource
+          description: Specifies the root resource for the decisions to return
+        actions:
+          type: object
+          title: Actions
+          description: A map of action name keys to Boolean values that indicate whether the action is allowed (true) or denied (false) for the specified resource
+        attributes:
+          type: object
+          title: Attributes
+          description: 'A map of attribute names to their values, if any response attributes are returned according to applicable policies'
+        advices:
+          type: object
+          title: Advices
+          description: 'A map of advice names to their values, if any advice is returned according to applicable policies'
+    title: Evaluate and evaluateTree schema response
+    description: Evaluate and evaluateTree schema response
