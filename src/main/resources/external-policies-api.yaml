@@ -82,7 +82,56 @@ paths:
           description: Missing bearer token.
         500:
           description: Unexpected server error happened during the process
-  /policies/{policyId}:
+  /policies:
+    post:
+      summary: Create Policy with Client-Assigned ID
+      operationId: post
+      description: Create or update policy
+      tags:
+        - Policy
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is assigned to
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - in: body
+          name: requestPayload
+          required: true
+          schema:
+            $ref: '#/definitions/PutPolicyRequest'
+      responses:
+        201:
+          description: Success
+          schema:
+            $ref: '#/definitions/PutPolicyResponse'
+          headers:
+            Location:
+              type: string
+              description: Resource location in response to successful create operation.
+        400:
+          description: |-
+            Bad request error. The cause can be the following:
+            * Missing privilege name
+            * Invalid json provided in the request
+            * Invalid value found in json
+            * Invalid policy name provided in json
+            * Resource name and JSON body name do not match
+            * Query id missing UID
+            * Invalid query id
+            * Invalid search filter
+            * Empty privilege name
+            * Entitlement value was NULL
+            * No resource type was expected
+            * Policy defines invalid resource type
+            * The provided resourceId does not match to the UUID in the json file
+        401:
+          description: Missing bearer token.
+        500:
+          description: Unexpected server error happened during the process
+  /policies/{resourceId}:
     put:
       summary: Create Policy with Client-Assigned ID
       operationId: put
@@ -108,7 +157,7 @@ paths:
           schema:
             $ref: '#/definitions/PutPolicyRequest'
       responses:
-        201:
+        200:
           description: Success
           schema:
             $ref: '#/definitions/PutPolicyResponse'
