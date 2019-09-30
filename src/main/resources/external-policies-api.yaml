@@ -47,7 +47,7 @@ paths:
               application:
                 type: string
                 title: Application
-                description: 'Holds the name of the application, and defaults to "iPlanetAMWebAgentService" if not specified'
+                description: 'Holds the name of the application, accepts "HmctsPolicySet"'
               subject:
                 type: object
                 properties:
@@ -291,7 +291,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         type: object
         title: Action values
@@ -365,7 +365,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         type: object
         title: Action values
@@ -439,7 +439,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         type: object
         title: Action values
@@ -513,7 +513,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         type: object
         title: Action values
