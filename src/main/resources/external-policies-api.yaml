@@ -47,7 +47,7 @@ paths:
               application:
                 type: string
                 title: Application
-                description: 'Holds the name of the application, and defaults to "iPlanetAMWebAgentService" if not specified'
+                description: 'Holds the name of the application, accepts "HmctsPolicySet"'
               subject:
                 type: object
                 properties:
@@ -82,8 +82,175 @@ paths:
           description: Missing bearer token.
         500:
           description: Unexpected server error happened during the process
+  /policies:
+    post:
+      summary: Create Policy with Client-Assigned ID
+      operationId: post
+      description: Create or update policy
+      tags:
+        - Policy
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is assigned to
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - in: body
+          name: requestPayload
+          required: true
+          schema:
+            $ref: '#/definitions/PutPolicyRequest'
+      responses:
+        201:
+          description: Success
+          schema:
+            $ref: '#/definitions/PutPolicyResponse'
+          headers:
+            Location:
+              type: string
+              description: Resource location in response to successful create operation.
+        400:
+          description: |-
+            Bad request error. The cause can be the following:
+            * Missing privilege name
+            * Invalid json provided in the request
+            * Invalid value found in json
+            * Invalid policy name provided in json
+            * Resource name and JSON body name do not match
+            * Query id missing UID
+            * Invalid query id
+            * Invalid search filter
+            * Empty privilege name
+            * Entitlement value was NULL
+            * No resource type was expected
+            * Policy defines invalid resource type
+            * The provided resourceId does not match to the UUID in the json file
+        401:
+          description: Missing bearer token.
+        500:
+          description: Unexpected server error happened during the process
+  /policies/{resourceId}:
+    put:
+      summary: Create Policy with Client-Assigned ID
+      operationId: put
+      description: Create or update policy
+      tags:
+        - Policy
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is assigned to
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - name: resourceId
+          in: path
+          description: The unique identifier of the policy
+          required: true
+          type: string
+        - in: body
+          name: requestPayload
+          required: true
+          schema:
+            $ref: '#/definitions/PutPolicyRequest'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/PutPolicyResponse'
+          headers:
+            Location:
+              type: string
+              description: Resource location in response to successful create operation.
+        400:
+          description: |-
+            Bad request error. The cause can be the following:
+            * Missing privilege name
+            * Invalid json provided in the request
+            * Invalid value found in json
+            * Invalid policy name provided in json
+            * Resource name and JSON body name do not match
+            * Query id missing UID
+            * Invalid query id
+            * Invalid search filter
+            * Empty privilege name
+            * Entitlement value was NULL
+            * No resource type was expected
+            * Policy defines invalid resource type
+            * The provided resourceId does not match to the UUID in the json file
+        401:
+          description: Missing bearer token.
+        500:
+          description: Unexpected server error happened during the process
+    get:
+      summary: Get policy
+      operationId: get
+      description: Retrieve policy
+      tags:
+        - Policy
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is assigned to
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - name: resourceId
+          in: path
+          description: The unique identifier of the policy
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/GetPolicyResponse'
+        401:
+          description: Missing bearer token.
+        404:
+          description: Policy not found
+        500:
+          description: Unexpected server error happened during the process
+    delete:
+      summary: Delete
+      operationId: delete
+      description: Delete policy
+      tags:
+        - Policy
+      parameters:
+        - in: header
+          name: authorization
+          description: >-
+            The access token granted to the client application after user authentication. The role is assigned to
+            the user the client application is acting on behalf of.
+          required: true
+          type: string
+        - name: resourceId
+          in: path
+          description: The unique identifier of the policy
+          required: true
+          type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/DeletePolicyResponse'
+        400:
+          description: Bad request error
+        401:
+          description: Missing bearer token.
+        404:
+          description: Policy not found
+        500:
+          description: Unexpected server error happened during the process
 definitions:
   EvaluatePoliciesResponse:
+    title: Evaluate and evaluateTree schema response
+    description: Evaluate and evaluateTree schema response
     type: array
     items:
       type: object
@@ -104,5 +271,299 @@ definitions:
           type: object
           title: Advices
           description: 'A map of advice names to their values, if any advice is returned according to applicable policies'
-    title: Evaluate and evaluateTree schema response
-    description: Evaluate and evaluateTree schema response
+  PutPolicyRequest:
+    title: Policy Resource Schema
+    description: Json schema for the policy resource
+    type: object
+    properties:
+      name:
+        type: string
+        title: Name
+        description: String matching the name of the application
+      active:
+        type: boolean
+        title: Active flag
+        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
+      description:
+        type: string
+        title: Description
+        description: String describing the policy
+      applicationName:
+        type: string
+        title: Application name
+        description: 'String containing the application name, such as "HmctsPolicySet"'
+      actionValues:
+        type: object
+        title: Action values
+        description: 'Set of string action names, each set to a boolean indicating whether the action is allowed. Chosen from the available actions provided by the associated Managing Resource Types resource type'
+      resources:
+        type: array
+        items:
+          type: string
+        title: Resources
+        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
+      subject:
+        type: object
+        title: Subject
+        description: 'Specifies the subject conditions to which the policy applies, where subjects can be combined by using the built-in types "AND", "OR", and "NOT", and where subject implementations are pluggable'
+      condition:
+        type: object
+        properties:
+          type:
+            type: string
+          conditions:
+            type: array
+            items:
+              type: object
+            title: Condition
+            description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+        title: Condition
+        description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+      resourceTypeUuid:
+        type: string
+        title: Resource Type UUID
+        description: The UUIDs of the resource type associated with the policy
+      resourceAttributes:
+        type: array
+        items:
+          type: object
+        title: Resource Attributes
+        description: List of attributes to return with decisions. These attributes are known as response attributes
+      lastModifiedBy:
+        type: string
+        title: Last Modified By
+        description: A string containing the universal identifier DN of the subject that most recently updated the policy
+      lastModifiedDate:
+        type: string
+        title: Last Modified date
+        description: 'An integer containing the last modified date and time, in number of seconds'
+      createdBy:
+        type: string
+        title: Created By
+        description: A string containing the universal identifier DN of the subject that created the policy
+      creationDate:
+        type: string
+        title: Creation Date
+        description: 'An integer containing the creation date and time, in number of seconds'
+  PutPolicyResponse:
+    title: Policy Resource Schema
+    description: Json schema for the policy resource
+    type: object
+    properties:
+      name:
+        type: string
+        title: Name
+        description: String matching the name of the application
+      active:
+        type: boolean
+        title: Active flag
+        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
+      description:
+        type: string
+        title: Description
+        description: String describing the policy
+      applicationName:
+        type: string
+        title: Application name
+        description: 'String containing the application name, such as "HmctsPolicySet"'
+      actionValues:
+        type: object
+        title: Action values
+        description: 'Set of string action names, each set to a boolean indicating whether the action is allowed. Chosen from the available actions provided by the associated Managing Resource Types resource type'
+      resources:
+        type: array
+        items:
+          type: string
+        title: Resources
+        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
+      subject:
+        type: object
+        title: Subject
+        description: 'Specifies the subject conditions to which the policy applies, where subjects can be combined by using the built-in types "AND", "OR", and "NOT", and where subject implementations are pluggable'
+      condition:
+        type: object
+        properties:
+          type:
+            type: string
+          conditions:
+            type: array
+            items:
+              type: object
+            title: Condition
+            description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+        title: Condition
+        description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+      resourceTypeUuid:
+        type: string
+        title: Resource Type UUID
+        description: The UUIDs of the resource type associated with the policy
+      resourceAttributes:
+        type: array
+        items:
+          type: object
+        title: Resource Attributes
+        description: List of attributes to return with decisions. These attributes are known as response attributes
+      lastModifiedBy:
+        type: string
+        title: Last Modified By
+        description: A string containing the universal identifier DN of the subject that most recently updated the policy
+      lastModifiedDate:
+        type: string
+        title: Last Modified date
+        description: 'An integer containing the last modified date and time, in number of seconds'
+      createdBy:
+        type: string
+        title: Created By
+        description: A string containing the universal identifier DN of the subject that created the policy
+      creationDate:
+        type: string
+        title: Creation Date
+        description: 'An integer containing the creation date and time, in number of seconds'
+  GetPolicyResponse:
+    title: Policy Resource Schema
+    description: Json schema for the policy resource
+    type: object
+    properties:
+      name:
+        type: string
+        title: Name
+        description: String matching the name of the application
+      active:
+        type: boolean
+        title: Active flag
+        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
+      description:
+        type: string
+        title: Description
+        description: String describing the policy
+      applicationName:
+        type: string
+        title: Application name
+        description: 'String containing the application name, such as "HmctsPolicySet"'
+      actionValues:
+        type: object
+        title: Action values
+        description: 'Set of string action names, each set to a boolean indicating whether the action is allowed. Chosen from the available actions provided by the associated Managing Resource Types resource type'
+      resources:
+        type: array
+        items:
+          type: string
+        title: Resources
+        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
+      subject:
+        type: object
+        title: Subject
+        description: 'Specifies the subject conditions to which the policy applies, where subjects can be combined by using the built-in types "AND", "OR", and "NOT", and where subject implementations are pluggable'
+      condition:
+        type: object
+        properties:
+          type:
+            type: string
+          conditions:
+            type: array
+            items:
+              type: object
+            title: Condition
+            description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+        title: Condition
+        description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+      resourceTypeUuid:
+        type: string
+        title: Resource Type UUID
+        description: The UUIDs of the resource type associated with the policy
+      resourceAttributes:
+        type: array
+        items:
+          type: object
+        title: Resource Attributes
+        description: List of attributes to return with decisions. These attributes are known as response attributes
+      lastModifiedBy:
+        type: string
+        title: Last Modified By
+        description: A string containing the universal identifier DN of the subject that most recently updated the policy
+      lastModifiedDate:
+        type: string
+        title: Last Modified date
+        description: 'An integer containing the last modified date and time, in number of seconds'
+      createdBy:
+        type: string
+        title: Created By
+        description: A string containing the universal identifier DN of the subject that created the policy
+      creationDate:
+        type: string
+        title: Creation Date
+        description: 'An integer containing the creation date and time, in number of seconds'
+  DeletePolicyResponse:
+    title: Policy Resource Schema
+    description: Json schema for the policy resource
+    type: object
+    properties:
+      name:
+        type: string
+        title: Name
+        description: String matching the name of the application
+      active:
+        type: boolean
+        title: Active flag
+        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
+      description:
+        type: string
+        title: Description
+        description: String describing the policy
+      applicationName:
+        type: string
+        title: Application name
+        description: 'String containing the application name, such as "HmctsPolicySet"'
+      actionValues:
+        type: object
+        title: Action values
+        description: 'Set of string action names, each set to a boolean indicating whether the action is allowed. Chosen from the available actions provided by the associated Managing Resource Types resource type'
+      resources:
+        type: array
+        items:
+          type: string
+        title: Resources
+        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
+      subject:
+        type: object
+        title: Subject
+        description: 'Specifies the subject conditions to which the policy applies, where subjects can be combined by using the built-in types "AND", "OR", and "NOT", and where subject implementations are pluggable'
+      condition:
+        type: object
+        properties:
+          type:
+            type: string
+          conditions:
+            type: array
+            items:
+              type: object
+            title: Condition
+            description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+        title: Condition
+        description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
+      resourceTypeUuid:
+        type: string
+        title: Resource Type UUID
+        description: The UUIDs of the resource type associated with the policy
+      resourceAttributes:
+        type: array
+        items:
+          type: object
+        title: Resource Attributes
+        description: List of attributes to return with decisions. These attributes are known as response attributes
+      lastModifiedBy:
+        type: string
+        title: Last Modified By
+        description: A string containing the universal identifier DN of the subject that most recently updated the policy
+      lastModifiedDate:
+        type: string
+        title: Last Modified date
+        description: 'An integer containing the last modified date and time, in number of seconds'
+      createdBy:
+        type: string
+        title: Created By
+        description: A string containing the universal identifier DN of the subject that created the policy
+      creationDate:
+        type: string
+        title: Creation Date
+        description: 'An integer containing the creation date and time, in number of seconds'
