@@ -249,7 +249,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         $ref: '#/definitions/ActionMap'
       resources:
@@ -308,7 +308,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         $ref: '#/definitions/ActionMap'
       resources:
@@ -364,7 +364,7 @@ definitions:
       application:
         type: string
         title: Application
-        description: 'Holds the name of the application, and defaults to "iPlanetAMWebAgentService" if not specified'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       subject:
         type: object
         properties:
@@ -427,7 +427,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         $ref: '#/definitions/ActionMap'
       resources:
@@ -486,7 +486,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         $ref: '#/definitions/ActionMap'
       resources:
@@ -545,7 +545,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         $ref: '#/definitions/ActionMap'
       resources:
@@ -604,7 +604,7 @@ definitions:
       applicationName:
         type: string
         title: Application name
-        description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
+        description: 'String containing the application name, such as "HmctsPolicySet"'
       actionValues:
         $ref: '#/definitions/ActionMap'
       resources:
