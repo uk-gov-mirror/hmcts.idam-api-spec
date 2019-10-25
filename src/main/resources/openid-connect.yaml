@@ -50,11 +50,9 @@ paths:
       consumes:
         - application/x-www-form-urlencoded
       parameters:
-        - in: header
-          name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
+        - name: Idam.Session
+          in: cookie
+          description: Cookie with the current user session created via non-otp authenticate
           required: true
           type: string
         - name: Idam.AuthId
