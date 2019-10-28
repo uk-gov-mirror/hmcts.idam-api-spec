@@ -42,6 +42,42 @@ paths:
         401:
           description: Username password combination not found
 
+  /authenticate?service=otpe:
+    post:
+      summary: 'OTP Authentication'
+      operationId: _authenticateOtp
+      description: Initiates and completes the OTP flow returning AuthId cookie on initiate and Session cookie on completion
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: Idam.Session
+          in: cookie
+          description: Cookie with the current user session created via non-otp authenticate
+          required: true
+          type: string
+        - name: Idam.AuthId
+          in: cookie
+          description: Cookie with the OTP flow reference created on the first call
+          required: false
+          type: string
+        - name: otp
+          in: formData
+          description: The one-time password sent on the flow initiation, empty when initiating OTP flow
+          required: false
+          type: string
+      responses:
+        200:
+          headers:
+            Set-Cookie:
+              type: string
+              description: |
+                A Set-Cookie instruction containing: - the cookie referencing the users
+                newly created or pre-existing session on completion - the cookie with the
+                OTP flow reference created on the first call
+          description: Success
+        401:
+          description: User not authorised
+
   /authorize:
     get:
       summary: 'Browser OpenID Connect Authorize'
