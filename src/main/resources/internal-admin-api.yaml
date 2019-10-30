@@ -1684,6 +1684,8 @@ definitions:
           - "ACCOUNT_SUSPENDED"
           - "PASSWORD_BLACKLISTED"
           - "TOKEN_INVALID"
+          - "INCORRECT_OTP"
+          - "INVALID_OTP_SESSION"
 
   JsonWebKeySet:
     type: object
