@@ -256,6 +256,11 @@ definitions:
     title: Query Response
     type: object
     properties:
+      resultCount:
+        type: integer
+        format: int32
+        default: 0
+        description: Count of individual result items
       result:
         type: array
         description: Array of matching items
@@ -318,28 +323,6 @@ definitions:
               type: string
               title: Creation Date
               description: 'An integer containing the creation date and time, in number of seconds'
-      resultCount:
-        type: integer
-        format: int32
-        default: 0
-        description: Count of individual result items
-      pagedResultsCookie:
-        type: string
-        description: Opaque cookie used by the server to keep track of the position in the search results
-      totalPagedResultsPolicy:
-        type: string
-        default: NONE
-        description: 'Either NONE, EXACT, or ESTIMATE. Indicates the accuracy of the result count'
-      totalPagedResults:
-        type: integer
-        format: int32
-        default: -1
-        description: Total count of individual items
-      remainingPagedResults:
-        type: integer
-        format: int32
-        default: -1
-        description: Count of individual items remaining
   GetPolicyResponse:
     title: Policy Resource Schema
     description: Json schema for the policy resource
