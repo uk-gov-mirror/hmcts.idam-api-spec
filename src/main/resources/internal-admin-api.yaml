@@ -1685,6 +1685,7 @@ definitions:
           - "PASSWORD_BLACKLISTED"
           - "TOKEN_INVALID"
           - "INCORRECT_OTP"
+          - "TOO_MANY_ATTEMPTS_OTP"
           - "INVALID_OTP_SESSION"
 
   JsonWebKeySet:
