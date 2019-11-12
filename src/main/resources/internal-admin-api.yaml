@@ -168,6 +168,8 @@ paths:
             description: "JWT is valid."
         400:
           description: "JWT is invalid (e.g. expired)."
+          schema:
+            $ref: '#/definitions/PasswordResetValidation'
 
   /forgotPassword:
     post:
@@ -1591,6 +1593,13 @@ definitions:
       redirectUri:
         type: string
         description: The redirection URI for login
+
+  PasswordResetValidation:
+    type: object
+    properties:
+      urlParameters:
+        type: string
+        description: The parameters to be sent back
 
   ForgotPasswordRequest:
     type: object
