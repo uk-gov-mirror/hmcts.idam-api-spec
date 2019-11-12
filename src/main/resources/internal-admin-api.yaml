@@ -1683,6 +1683,7 @@ definitions:
           - "ACCOUNT_LOCKED"
           - "ACCOUNT_SUSPENDED"
           - "PASSWORD_BLACKLISTED"
+          - "PASSWORD_CONTAINS_PERSONAL_INFO"
           - "TOKEN_INVALID"
           - "INCORRECT_OTP"
           - "TOO_MANY_ATTEMPTS_OTP"
