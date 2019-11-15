@@ -1412,6 +1412,9 @@ definitions:
       redirectUri:
         type: string
         description: The redirection URI for login
+      clientId:
+        type: string
+        description: The client ID used to generate a link to the registration page on the 'expired link' screen
 
   PinRequest:
     type: object
@@ -1689,7 +1692,11 @@ definitions:
           - "ACCOUNT_LOCKED"
           - "ACCOUNT_SUSPENDED"
           - "PASSWORD_BLACKLISTED"
+          - "PASSWORD_CONTAINS_PERSONAL_INFO"
           - "TOKEN_INVALID"
+          - "INCORRECT_OTP"
+          - "TOO_MANY_ATTEMPTS_OTP"
+          - "INVALID_OTP_SESSION"
 
   JsonWebKeySet:
     type: object
