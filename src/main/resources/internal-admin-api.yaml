@@ -169,7 +169,7 @@ paths:
         400:
           description: "JWT is invalid."
         404:
-          description: "JWT not found (e.g. expired). Returns the initial request back to resume user journey."
+          description: "JWT not found. Returns the initial request back (if exists) to resume user journey."
           schema:
             $ref: '#/definitions/ForgotPasswordRequest'
 
