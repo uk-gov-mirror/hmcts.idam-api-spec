@@ -167,7 +167,11 @@ paths:
             type: string
             description: "JWT is valid."
         400:
-          description: "JWT is invalid (e.g. expired)."
+          description: "JWT is invalid."
+        404:
+          description: "JWT not found. Returns the initial request back (if exists) to resume user journey."
+          schema:
+            $ref: '#/definitions/ForgotPasswordRequest'
 
   /forgotPassword:
     post:
@@ -1610,6 +1614,12 @@ definitions:
       clientId:
         type: string
         description: OAuth2 client id of the service where the reset password journey started
+      state:
+        type: string
+        description: Optional state to be sent back to the initiating service.
+      scope:
+        type: string
+        description: Optional scopes to request.
     required: [email]
 
   ResetPasswordRequest:
