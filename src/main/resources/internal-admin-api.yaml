@@ -1616,7 +1616,7 @@ definitions:
         description: OAuth2 client id of the service where the reset password journey started
       state:
         type: string
-        description: Optional state to be sent back to the initiating service after successful login.
+        description: Optional state to be sent back to the initiating service.
       scope:
         type: string
         description: Optional scopes to request.
