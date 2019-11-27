@@ -171,7 +171,7 @@ paths:
         404:
           description: "JWT not found. Returns the initial request back (if exists) to resume user journey."
           schema:
-            $ref: '#/definitions/ForgotPasswordRequest'
+            $ref: '#/definitions/ForgotPasswordDetails'
 
   /forgotPassword:
     post:
@@ -187,7 +187,7 @@ paths:
         - in: body
           name: request
           schema:
-            $ref: '#/definitions/ForgotPasswordRequest'
+            $ref: '#/definitions/ForgotPasswordDetails'
       responses:
         204:
           description: "Validation email is sent."
@@ -1599,7 +1599,7 @@ definitions:
         type: string
         description: The redirection URI for login
 
-  ForgotPasswordRequest:
+  ForgotPasswordDetails:
     type: object
     properties:
       email:
