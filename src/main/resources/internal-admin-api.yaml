@@ -1731,8 +1731,10 @@ definitions:
         type: string
         description: The exponent for a standard pem
       x5c:
-        type: string
         description: The x.509 certificate chain
+        type: array
+        items:
+          type: string
       x5t:
         type: string
         description: The thumbprint of the x.509 cert (SHA-1 thumbprint)
