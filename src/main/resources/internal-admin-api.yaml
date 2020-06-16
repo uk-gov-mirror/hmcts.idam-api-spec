@@ -1698,7 +1698,7 @@ definitions:
           - "INCORRECT_OTP"
           - "TOO_MANY_ATTEMPTS_OTP"
           - "INVALID_OTP_SESSION"
-          - "STALE_USER_NEEDS_TO_REGISTER"
+          - "STALE_USER_REGISTRATION_SENT"
 
   JsonWebKeySet:
     type: object
