@@ -14,9 +14,11 @@ basePath: /o
 paths:
   /authenticate:
     post:
-      summary: 'Authenticate Username and Password'
+      summary: 'Authenticate User'
       operationId: _authenticate
-      description: Returns a cookie reference to either a new or existing session
+      description: |
+        On success, it returns a cookie reference to either a new or existing session. If MFA is required,
+        it will initiate and complete the OTP flow returning AuthId cookie on initiate and Session cookie on completion.
       consumes:
         - application/x-www-form-urlencoded
       parameters:
@@ -30,6 +32,21 @@ paths:
           description: The user's password
           required: true
           type: string
+        - name: redirectUri
+          in: formData
+          description: The redirectUri parameter to run against policies to work out if OTP is required
+          required: true
+          type: string
+        - name: otp
+          in: formData
+          description: The one-time password sent to complete the OTP flow, empty when initiating
+          required: false
+          type: string
+        - name: Idam.AuthId
+          in: cookie
+          description: Cookie with the OTP flow reference created on the first call, use when sending OTP
+          required: false
+          type: string
       responses:
         200:
           headers:
@@ -37,46 +54,12 @@ paths:
               type: string
               description: |
                 A Set-Cookie instruction containing the cookie referencing the users
-                newly created or pre-existing session.
-          description: Authentication is successful.
+                newly created or pre-existing session, or AuthId cookie to continue the flow with OTP.
+          description: Authentication is successful, or waiting for another call with OTP.
+        400:
+          description: Incorrect OTP
         401:
           description: Username password combination not found
-
-  /authenticate?service=otpe:
-    post:
-      summary: 'OTP Authentication'
-      operationId: _authenticateOtp
-      description: Initiates and completes the OTP flow returning AuthId cookie on initiate and Session cookie on completion
-      consumes:
-        - application/x-www-form-urlencoded
-      parameters:
-        - name: Idam.Session
-          in: cookie
-          description: Cookie with the current user session created via non-otp authenticate
-          required: true
-          type: string
-        - name: Idam.AuthId
-          in: cookie
-          description: Cookie with the OTP flow reference created on the first call
-          required: false
-          type: string
-        - name: otp
-          in: formData
-          description: The one-time password sent on the flow initiation, empty when initiating OTP flow
-          required: false
-          type: string
-      responses:
-        200:
-          headers:
-            Set-Cookie:
-              type: string
-              description: |
-                A Set-Cookie instruction containing: - the cookie referencing the users
-                newly created or pre-existing session on completion - the cookie with the
-                OTP flow reference created on the first call
-          description: Success
-        401:
-          description: User not authorised
 
   /authorize:
     get:
