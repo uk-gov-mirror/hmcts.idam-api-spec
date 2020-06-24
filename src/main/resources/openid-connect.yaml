@@ -42,6 +42,11 @@ paths:
           description: The one-time password sent to complete the OTP flow, empty when initiating
           required: false
           type: string
+        - name: originIp
+          in: formData
+          description: The original IP address of the auth request (user)
+          required: true
+          type: string
         - name: Idam.AuthId
           in: cookie
           description: Cookie with the OTP flow reference created on the first call, use when sending OTP
