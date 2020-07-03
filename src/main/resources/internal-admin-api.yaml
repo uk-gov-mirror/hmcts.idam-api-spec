@@ -1699,6 +1699,7 @@ definitions:
           - "TOO_MANY_ATTEMPTS_OTP"
           - "INVALID_OTP_SESSION"
           - "STALE_USER_REGISTRATION_SENT"
+          - "POLICIES_FAIL"
 
   JsonWebKeySet:
     type: object
