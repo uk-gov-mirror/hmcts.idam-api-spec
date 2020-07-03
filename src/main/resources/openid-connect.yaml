@@ -12,36 +12,6 @@ produces:
   - application/json
 basePath: /o
 paths:
-  /authenticate?service=otpe:
-    post:
-      summary: 'Finishes User Authentication'
-      operationId: _authenticate_otp
-      description: Finishes an authentication flow by supplying an OTP for MFA.
-      consumes:
-        - application/x-www-form-urlencoded
-      parameters:
-        - name: otp
-          in: formData
-          description: The one-time password sent to complete the OTP flow
-          required: true
-          type: string
-        - name: authId
-          in: formData
-          description: A reference to an already existing authentication flow requiring MFA.
-          required: true
-          type: string
-      responses:
-        200:
-          headers:
-            Set-Cookie:
-              type: string
-              description: |
-                A Set-Cookie instruction containing the cookie referencing the users
-                newly created or pre-existing session.
-          description: Authentication is successful.
-        400:
-          description: Incorrect OTP
-
   /authenticate:
     post:
       summary: 'Authenticate User'
@@ -83,6 +53,36 @@ paths:
           description: Authentication is successful, or waiting for another call with OTP.
         401:
           description: Username password combination not found
+
+  /authenticate?service=otpe:
+    post:
+      summary: 'Finishes User Authentication'
+      operationId: _authenticate_otp
+      description: Finishes an authentication flow by supplying an OTP for MFA.
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - name: otp
+          in: formData
+          description: The one-time password sent to complete the OTP flow
+          required: true
+          type: string
+        - name: authId
+          in: formData
+          description: A reference to an already existing authentication flow requiring MFA.
+          required: true
+          type: string
+      responses:
+        200:
+          headers:
+            Set-Cookie:
+              type: string
+              description: |
+                A Set-Cookie instruction containing the cookie referencing the users
+                newly created or pre-existing session.
+          description: Authentication is successful.
+        400:
+          description: Incorrect OTP
 
   /authorize:
     get:
