@@ -66,6 +66,9 @@ definitions:
       pending:
         description: Flag indicating whether the user is pending, i.e. registered but not activated yet.
         type: boolean
+      stale:
+        description: Flag indicating whether the user is a stale user.
+        type: boolean
       roles:
         description: The list of the roles of the user
         type: array
