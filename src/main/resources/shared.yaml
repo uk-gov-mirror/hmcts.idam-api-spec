@@ -77,6 +77,14 @@ definitions:
       lastModified:
         description: The date and time this user was last modified.
         type: string
+      ssoProvider:
+        type: string
+        description: SSO Provider
+        title: SSO Provider
+      ssoId:
+        type: string
+        description: User ID on SSO Provider
+        title: User ID on SSO Provider
 
   ErrorMap:
     title: ErrorMap
