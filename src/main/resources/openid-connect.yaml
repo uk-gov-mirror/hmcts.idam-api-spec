@@ -14,7 +14,7 @@ basePath: /o
 paths:
   /authenticate:
     post:
-      summary: 'Authenticate User'
+      summary: 'Authenticate Username and Password'
       operationId: _authenticate
       description: |
         On success, it returns a cookie reference to either a new or existing session. If MFA is required,
@@ -56,7 +56,7 @@ paths:
 
   /authenticate?service=otpe:
     post:
-      summary: 'Finishes User Authentication'
+      summary: 'Finishes User Authentication using OTP'
       operationId: _authenticate_otp
       description: Finishes an authentication flow by supplying an OTP for MFA.
       consumes:
@@ -83,6 +83,8 @@ paths:
           description: Authentication is successful.
         400:
           description: Incorrect OTP
+        401:
+          description: User not authorised
 
   /authorize:
     get:
