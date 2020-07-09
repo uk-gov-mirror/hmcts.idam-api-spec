@@ -1420,6 +1420,7 @@ definitions:
       staleUserActivated:
         type: boolean
         description: Indicates if a stale user was activated
+        default: false
   PinRequest:
     type: object
     properties:
