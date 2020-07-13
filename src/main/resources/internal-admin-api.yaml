@@ -1417,7 +1417,10 @@ definitions:
       clientId:
         type: string
         description: The client ID used to generate a link to the registration page on the 'expired link' screen
-
+      staleUserActivated:
+        type: boolean
+        description: Indicates if a stale user was activated
+        default: false
   PinRequest:
     type: object
     properties:
