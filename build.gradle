@@ -18,7 +18,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.4'
 }
 
-version = '2.18.0'
+version = '3.0.0-BETA'
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
@@ -107,6 +107,10 @@ task generateApi {
                 'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition',
                 'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
                 'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap'
+        ])
+
+        generateCodeFromSwagger('src/main/resources/external-sso-api.yaml', 'external', [
+            'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User'
         ])
 
         generateCodeFromSwagger('src/main/resources/external-dynamic-role-assign-api.yaml', 'external', [
