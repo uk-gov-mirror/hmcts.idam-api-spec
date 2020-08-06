@@ -1705,6 +1705,7 @@ definitions:
         enum:
           - "ACCOUNT_LOCKED"
           - "ACCOUNT_SUSPENDED"
+          - "ACCOUNT_LINKED_TO_EXTERNAL_PROVIDER"
           - "PASSWORD_BLACKLISTED"
           - "PASSWORD_CONTAINS_PERSONAL_INFO"
           - "TOKEN_INVALID"
