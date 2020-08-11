@@ -80,6 +80,13 @@ paths:
           description: The user's password
           required: true
           type: string
+        - in: formData
+          name: redirectUri
+          description: "The URI the user should be redirected to after login.
+          This doesn't actually do a redirect, rather used by other processes
+          such as the stale user reregistration process to determine where a user should go after reregistration."
+          required: false
+          type: string
       responses:
         200:
           description: "Logged in ok"
