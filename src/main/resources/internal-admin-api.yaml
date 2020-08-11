@@ -1471,9 +1471,6 @@ definitions:
       selfRegistrationAllowed:
         type: boolean
         description: Flag indicating whether Self-service registration is enabled for this service.
-      ejudiciaryAuthAllowed:
-        type: boolean
-        description: Flag indicating whether eJudiciary authentication is enabled for this service.
       ssoProviders:
         type: array
         items:
@@ -1519,9 +1516,6 @@ definitions:
       selfRegistrationAllowed:
         type: boolean
         description: Flag indicating whether Self-service registration is enabled for this service. If omitted, defaults to false.
-      ejudiciaryAuthAllowed:
-        type: boolean
-        description: Flag indicating whether eJudiciary authentication is enabled for this service.
       ssoProviders:
           type: array
           items:
