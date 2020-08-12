@@ -19,7 +19,7 @@ plugins {
 }
 
 
-version = '3.0.5'
+version = '3.0.1.1'
 
 
 group = 'uk.gov.hmcts.reform.idam'
