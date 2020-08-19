@@ -18,7 +18,9 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.4'
 }
 
-version = '3.0.4'
+
+version = '3.0.5'
+
 
 group = 'uk.gov.hmcts.reform.idam'
 
