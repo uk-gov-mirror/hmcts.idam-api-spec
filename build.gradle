@@ -7,20 +7,15 @@ buildscript {
     }
     dependencies {
         classpath 'io.swagger:swagger-codegen:2.4.2'
-        classpath 'io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE'
     }
 }
 
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'com.jfrog.bintray' version '1.8.4'
 }
 
-
-version = '3.0.9'
-
+version = '3.1.0'
 
 group = 'uk.gov.hmcts.reform.idam'
 
@@ -34,9 +29,8 @@ tasks.withType(JavaCompile) {
 }
 
 repositories {
-    maven {
-        url 'https://dl.bintray.com/hmcts/hmcts-maven'
-    }
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
     jcenter()
 }
 
@@ -45,19 +39,13 @@ configurations {
     compile.extendsFrom generatedCompile
 }
 
-dependencyManagement {
-    imports {
-        mavenBom 'uk.gov.hmcts.reform.idam:idam-bom:2.1.2'
-    }
-}
-
 dependencies {
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger2'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger-ui'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.7.RELEASE'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.2.7.RELEASE'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     generatedCompile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    generatedCompile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310'
+    generatedCompile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.1'
 }
 
 project.ext {
@@ -147,23 +135,6 @@ publishing {
             groupId project.group
             artifactId rootProject.name
             version project.version
-        }
-    }
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['Main']
-    publish = true
-    pkg {
-        repo = 'hmcts-maven'
-        name = "${rootProject.name}"
-        userOrg = 'hmcts'
-        licenses = ['MIT']
-        vcsUrl = "https://github.com/hmcts/${rootProject.name}"
-        version {
-            name = project.version
         }
     }
 }
