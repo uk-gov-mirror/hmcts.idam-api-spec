@@ -1885,3 +1885,4 @@ definitions:
       mfa:
         type: string
         description: Organisation MFA type
+        
