@@ -1,0 +1,81 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: Bulk User Management API v1.0
+  description: >-
+basePath: /api/v1
+tags:
+  - name: Bulk User Management
+securityDefinitions:
+  auth:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: http://authserver/login
+    tokenUrl: http://authserver/oauth2/token
+    scopes:
+      create-user: allows modifying a User resource
+
+paths:
+  /users/registration/batch:
+    post:
+      tags:
+        - Bulk User Management
+      operationId: batchUserRegistration
+      description: Issue a bulk user registration batch request.
+      parameters:
+        - in: header
+          name: authorization
+          description: The access token associated to the session.
+          required: true
+          type: string
+        - in: body
+          name: request
+          required: true
+          description: the body of the User JSON object.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/BulkRegistrationRequest'
+      responses:
+        202:
+          description: Request accepted.
+          headers:
+            Location:
+              type: string
+              description: |
+                A Location header showing the URI where information pertaining to the current status
+                of the scheduled batch operation can be queried. eg. Location: /api/v1/batch/{{id}}
+        401:
+          description: Missing bearer token.
+        403:
+          description: Bearer token is expired, or it doesn't have the 'create-user' scope.
+        400:
+          description: Required parameters are missing or invalid.
+
+definitions:
+  BulkRegistrationRequest:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: "user unique ID (UID)"
+      email:
+        type: string
+        format: email
+        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        description: "email used for registration"
+      firstName:
+        type: string
+        minLength: 1
+        description: "first name"
+      lastName:
+        type: string
+        minLength: 1
+        description: "last name"
+      roles:
+        type: array
+        items:
+          type: string
+        description: "The names of the roles to be assigned to the user"
+    required: [email, firstname, lastname]
