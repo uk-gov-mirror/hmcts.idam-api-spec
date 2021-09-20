@@ -1120,7 +1120,7 @@ paths:
           name: accountId
           type: string
           required: true
-          description: "The id of the user to invite"
+          description: "The id of the user"
       responses:
         200:
           description: "The requested account was found and returned"
@@ -1142,6 +1142,8 @@ paths:
       responses:
         201:
           description: "Account created"
+          schema:
+            $ref: '#/definitions/Account'
         409:
           description: "The user already exists."
 
@@ -1351,6 +1353,12 @@ definitions:
         type: array
         items:
           type: string
+      ssoId:
+        description: The ID of the user in the external sso provider system.
+        type: string
+      ssoProvider:
+        description: Represents the provider this user was federated from.
+        type: string
       linkedRoles:
         description: Extra, usually hidden roles the user may have been granted
         type: array
@@ -1618,6 +1626,12 @@ definitions:
       password:
         type: string
         description: The user password
+      ssoId:
+        type: string
+        description: The ID of the user in the external sso provider system.
+      ssoProvider:
+        type: string
+        description: Represents the provider this user was federated from.
       roles:
         type: array
         description: The list of the roles of the user
