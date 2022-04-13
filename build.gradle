@@ -15,7 +15,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = '3.6.0'
+version = '3.7.0'
 
 group = 'uk.gov.hmcts.reform.idam'
 
@@ -40,12 +40,12 @@ configurations {
 }
 
 dependencies {
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.7.RELEASE'
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.2.7.RELEASE'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.6'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.6.6'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+    generatedCompile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
     generatedCompile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    generatedCompile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.1'
+    generatedCompile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.2'
 }
 
 project.ext {
