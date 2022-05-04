@@ -69,6 +69,9 @@ definitions:
       stale:
         description: Flag indicating whether the user is a stale user.
         type: boolean
+      pwdAccountLockedTime:
+        description: Time the user's account is locked.
+        type: string
       roles:
         description: The list of the roles of the user
         type: array
