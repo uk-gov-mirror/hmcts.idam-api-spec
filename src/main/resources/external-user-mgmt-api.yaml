@@ -213,7 +213,7 @@ paths:
         - auth:
             - manage-user
 
-  /users/sso/{userId}:
+  /users/{userId}/sso:
     delete:
       tags:
         - User Management
