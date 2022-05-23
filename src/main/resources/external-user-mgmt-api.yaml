@@ -208,7 +208,7 @@ paths:
         400:
           description: Required parameters are missing or invalid.
         404:
-          description: The user could not be found.
+          description: The user to be deleted could not be found.
       security:
         - auth:
             - manage-user
@@ -244,7 +244,7 @@ paths:
         400:
           description: Required parameters are missing or invalid.
         404:
-          description: The user to be deleted could not be found.
+          description: The user where SSO is to be removed could not be found.
       security:
         - auth:
             - manage-user
