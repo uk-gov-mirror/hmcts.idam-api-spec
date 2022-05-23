@@ -213,6 +213,42 @@ paths:
         - auth:
             - manage-user
 
+  /users/{userId}/sso:
+    delete:
+      tags:
+        - User Management
+      description: 'Remove SSO from the user.'
+      summary: removeSSOFromUser
+      operationId: removeSSOFromUser
+      deprecated: false
+      produces:
+        - application/json
+      parameters:
+        - name: authorization
+          in: header
+          description: The access token associated to the session.
+          required: true
+          type: string
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: The userId of the user where SSO is to be removed.
+      responses:
+        204:
+          description: SSO for the user removed successfully.
+        401:
+          description: Missing bearer token.
+        403:
+          description: Bearer token is expired, or it doesn't have the 'manage-user' scope, or the target user's roles are not included in the current user's assignable roles.
+        400:
+          description: Required parameters are missing or invalid.
+        404:
+          description: The user where SSO is to be removed could not be found.
+      security:
+        - auth:
+            - manage-user
+
   /users/{userId}/roles:
     post:
       tags:
