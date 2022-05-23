@@ -197,10 +197,10 @@ paths:
           in: path
           required: true
           type: string
-          description: The userId of the user where SSO is to be removed.
+          description: The userId of the user to be deleted.
       responses:
         204:
-          description: SSO for the user removed successfully.
+          description: User deleted successfully.
         401:
           description: Missing bearer token.
         403:
@@ -259,8 +259,6 @@ paths:
         Grants one or more roles to the user. The role(s) must exist in the system for the operation to be successful.
       produces:
         - application/json
-      schema:
-        $ref: '#/definitions/User'
       parameters:
         - in: header
           name: authorization
