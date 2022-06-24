@@ -173,6 +173,20 @@ paths:
             their e-mail address (or other identifier) and then wants to pass that value as a hint
             to the discovered authorization service.
           type: string
+        - name: code_challenge
+          in: query
+          required: false
+          description: |
+            Used in PKCE extension to Authorization Code flow. A base64 URL encoded string derived from
+            the code verifier using one of the allowed transformation methods.
+          type: string
+        - name: code_challenge_method
+          in: query
+          required: false
+          description: |
+            Used in PKCE extension to Authorization Code flow. Transformation method used to derive code
+            challenge from the code verifier. The value can only be either 'S256' or 'plain'.
+          type: string
       responses:
         302:
           headers:
@@ -283,6 +297,20 @@ paths:
             their e-mail address (or other identifier) and then wants to pass that value as a hint
             to the discovered authorization service.
           type: string
+        - name: code_challenge
+          in: formData
+          required: false
+          description: |
+            Used in PKCE extension to Authorization Code flow. A base64 URL encoded string derived from
+            the code verifier using one of the allowed transformation methods.
+          type: string
+        - name: code_challenge_method
+          in: formData
+          required: false
+          description: |
+            Used in PKCE extension to Authorization Code flow. Transformation method used to derive code
+            challenge from the code verifier. The value can only be either 'S256' or 'plain'.
+          type: string
       responses:
         302:
           headers:
@@ -367,6 +395,13 @@ paths:
         - name: password
           in: formData
           description: The password of the user for implicit grant_type of Password
+          required: false
+          type: string
+        - name: code_verifier
+          in: formData
+          description: |
+            Used in PKCE extension to Authorization Code flow. A base64 url encoded random string with
+            a minimum length of 43 characters and a maximum length of 128 characters.
           required: false
           type: string
       tags:
