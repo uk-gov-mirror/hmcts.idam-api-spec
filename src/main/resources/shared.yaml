@@ -54,7 +54,7 @@ definitions:
         minLength: 1
       email:
         description: The email of the user
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
         type: string
       active:
         description: Flag indicating whether the user is active (false means the user is suspended).
@@ -215,7 +215,7 @@ definitions:
       email:
         type: string
         format: email
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
         description: "email used for registration"
       password:
         type: string
@@ -248,7 +248,7 @@ definitions:
       email:
         type: string
         format: email
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
         description: "email used for registration"
       firstName:
         type: string
