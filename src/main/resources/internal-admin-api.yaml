@@ -1339,7 +1339,7 @@ definitions:
         type: string
       email:
         description: The email of the user
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
         type: string
       active:
         description: Flag indicating whether the user is active (false means the user is suspended).
@@ -1615,7 +1615,7 @@ definitions:
         description: The user id
       email:
         type: string
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
         description: The user email address
       forename:
         type: string
@@ -1654,7 +1654,7 @@ definitions:
     properties:
       email:
         type: string
-        pattern: ^[^()!&/;%*@]+@[^()!&/;%*@]+\.[^()!&/;%*@]+$
+        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
         description: Email identifying the user account
       redirectUri:
         type: string
