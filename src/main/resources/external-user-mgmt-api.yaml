@@ -1,21 +1,11 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: 1.0.13
   title: User Management API v1.0
-  description: >-
-basePath: /api/v1
+  description: ""
 tags:
   - name: User Management
   - name: User Role Management
-securityDefinitions:
-  auth:
-    type: oauth2
-    flow: accessCode
-    authorizationUrl: http://authserver/login
-    tokenUrl: http://authserver/oauth2/token
-    scopes:
-      manage-user: allows modifying a User resource
-
 paths:
   /users:
     get:
@@ -23,52 +13,56 @@ paths:
         - User Management
       summary: Search for Users matching the ElasticSearch query
       operationId: searchUsers
-      produces:
-        - application/json
       parameters:
         - name: query
           in: query
           description: A query string in ElasticSearch Query DSL
           required: true
-          type: string
+          schema:
+            type: string
         - name: size
           in: query
           description: The number of items per page, default of 20
           required: false
-          type: integer
-          format: int32
-          x-example: 20
+          example: 20
+          schema:
+            type: integer
+            format: int32
         - name: page
           in: query
           description: The index of the page of items, starting at 0 for the first page
           required: false
-          type: integer
-          format: int32
-          x-example: 10
+          example: 10
+          schema:
+            type: integer
+            format: int32
       responses:
-        '200':
+        "200":
           headers:
             Link:
-              type: string
-              description: |
+              description: >
                 Reference uri for the first page, the next page and the last page
+              schema:
+                type: string
             X-Total-Count:
-              type: integer
               description: |
                 A count of the total items the search query has matched
+              schema:
+                type: integer
           description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/User'
-        400:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "400":
           description: Required parameters are missing or invalid.
-        '401':
+        "401":
           description: Missing or invalid bearer token
-        '403':
+        "403":
           description: Bearer token is expired, or it doesn't have the 'search-user' scope.
       deprecated: false
-
   /users/registration:
     post:
       tags:
@@ -80,26 +74,27 @@ paths:
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
-        - in: body
-          name: request
-          required: true
-          description: the body of the User JSON object.
           schema:
-            $ref: '#/definitions/UserRegistrationRequest'
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserRegistrationRequest"
+        description: the body of the User JSON object.
+        required: true
       responses:
-        201:
+        "201":
           description: Registration accepted.
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the 'create-user' scope.
-        409:
-          description: User with this email already exists.
-        400:
+        "400":
           description: Required parameters are missing or invalid.
-
-  /users/{userId}:
+        "401":
+          description: Missing bearer token.
+        "403":
+          description: Bearer token is expired, or it doesn't have the 'create-user' scope.
+        "409":
+          description: User with this email already exists.
+  "/users/{userId}":
     get:
       tags:
         - User Management
@@ -107,31 +102,34 @@ paths:
       summary: getUserByUserid
       operationId: GetUserByUserId
       deprecated: false
-      produces:
-        - application/json
       parameters:
         - in: header
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - name: userId
           in: path
           required: true
-          type: string
-          description: The userId of the user to be found (e.g. 'f65bd0f5-e733-4f4a-9ed4-901444ece494').
-      responses:
-        200:
-          description: The details of the requested user
+          description: The userId of the user to be found (e.g.
+            'f65bd0f5-e733-4f4a-9ed4-901444ece494').
           schema:
-            $ref: '#/definitions/User'
-        400:
+            type: string
+      responses:
+        "200":
+          description: The details of the requested user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
           description: Required parameters are missing or invalid.
-        401:
+        "401":
           description: Missing bearer token.
-        403:
+        "403":
           description: Bearer token is expired, or it doesn't have the 'manage-user' scope.
-        404:
+        "404":
           description: The user does not exist.
       security:
         - auth:
@@ -139,41 +137,44 @@ paths:
     patch:
       tags:
         - User Management
-      description: 'Update the user details.'
+      description: Update the user details.
       summary: updateUserDetails
       operationId: UpdateUserDetails
       deprecated: false
-      produces:
-        - application/json
       parameters:
         - in: header
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - name: userId
           in: path
           required: true
-          type: string
           description: The userId of the user to be updated.
-        - name: body
-          in: body
-          required: true
-          description: the body of the User JSON object containing the fields to update.
           schema:
-            $ref: '#/definitions/User'
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        description: the body of the User JSON object containing the fields to update.
+        required: true
       responses:
-        200:
+        "200":
           description: User updated successfully.
-          schema:
-            $ref: '#/definitions/User'
-        400:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
           description: Required parameters are missing or invalid.
-        401:
+        "401":
           description: Missing bearer token.
-        403:
+        "403":
           description: Bearer token is expired, or it doesn't have the 'manage-user' scope.
-        404:
+        "404":
           description: The user to be updated could not be found.
       security:
         - auth:
@@ -181,113 +182,111 @@ paths:
     delete:
       tags:
         - User Management
-      description: 'Delete the user.'
+      description: Delete the user.
       summary: deleteUser
       operationId: deleteUserByUserId
       deprecated: false
-      produces:
-        - application/json
       parameters:
         - in: header
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - name: userId
           in: path
           required: true
-          type: string
           description: The userId of the user to be deleted.
+          schema:
+            type: string
       responses:
-        204:
+        "204":
           description: User deleted successfully.
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the 'manage-user' scope, or the target user's roles are not included in the current user's assignable roles.
-        400:
+        "400":
           description: Required parameters are missing or invalid.
-        404:
+        "401":
+          description: Missing bearer token.
+        "403":
+          description: Bearer token is expired, or it doesn't have the 'manage-user' scope,
+            or the target user's roles are not included in the current user's
+            assignable roles.
+        "404":
           description: The user to be deleted could not be found.
       security:
         - auth:
             - manage-user
-
-  /users/{userId}/sso:
+  "/users/{userId}/sso":
     delete:
       tags:
         - User Management
-      description: 'Remove SSO from the user.'
+      description: Remove SSO from the user.
       summary: removeSSOFromUser
       operationId: removeSSOFromUser
       deprecated: false
-      produces:
-        - application/json
       parameters:
         - name: authorization
           in: header
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - name: userId
           in: path
           required: true
-          type: string
           description: The userId of the user where SSO is to be removed.
+          schema:
+            type: string
       responses:
-        204:
+        "204":
           description: SSO for the user removed successfully.
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the 'manage-user' scope, or the target user's roles are not included in the current user's assignable roles.
-        400:
+        "400":
           description: Required parameters are missing or invalid.
-        404:
+        "401":
+          description: Missing bearer token.
+        "403":
+          description: Bearer token is expired, or it doesn't have the 'manage-user' scope,
+            or the target user's roles are not included in the current user's
+            assignable roles.
+        "404":
           description: The user where SSO is to be removed could not be found.
       security:
         - auth:
             - manage-user
-
-  /users/{userId}/roles:
+  "/users/{userId}/roles":
     post:
       tags:
         - User Role Management
       operationId: grantRolesToUser
       summary: Grants one or more roles to the user
-      description: >-
-        Grants one or more roles to the user. The role(s) must exist in the system for the operation to be successful.
-      produces:
-        - application/json
+      description: Grants one or more roles to the user. The role(s) must exist in the
+        system for the operation to be successful.
       parameters:
         - in: header
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: userId
-          type: string
           required: true
           description: The userId of the user to be updated.
-        - in: body
-          name: request
-          required: true
-          description: the body of the User JSON object containing the fields to update.
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/RoleDefinition'
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/RoleDefinitionArray"
       responses:
-        201:
+        "201":
           description: Role granted successfully
-        400:
+        "400":
           description: The user is already assigned to this role or the role does not exist.
-        401:
+        "401":
           description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the 'manage-user' scope, or some of the roles to assign are not part of the current user's assignable roles.
-        404:
+        "403":
+          description: Bearer token is expired, or it doesn't have the 'manage-user' scope,
+            or some of the roles to assign are not part of the current user's
+            assignable roles.
+        "404":
           description: The user to be updated could not be found.
       security:
         - auth:
@@ -297,104 +296,131 @@ paths:
         - User Role Management
       operationId: replacesRolesGrants
       summary: Replaces the entire set of role grants to the user
-      description: >-
-        Grants one or more roles to the user. The role(s) must exist in the system for the operation to be successful.
+      description: Grants one or more roles to the user. The role(s) must exist in the
+        system for the operation to be successful.
       parameters:
         - in: header
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: userId
-          type: string
           required: true
           description: The userId of the user to be updated.
-        - in: body
-          name: request
-          required: true
-          description: the body of the User JSON object containing the fields to update.
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/RoleDefinition'
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/RoleDefinitionArray"
       responses:
-        201:
+        "201":
           description: Role grants replaced successfully.
-        400:
+        "400":
           description: One of the roles to assign does not exist.
-        401:
+        "401":
           description: Missing bearer token
-        403:
-          description: Bearer token is expired, or it doesn't have the 'manage-user' scope, or some of the roles to assign are not part of the current user's assignable roles.
-        404:
+        "403":
+          description: Bearer token is expired, or it doesn't have the 'manage-user' scope,
+            or some of the roles to assign are not part of the current user's
+            assignable roles.
+        "404":
           description: The user to be updated could not be found.
       security:
         - auth:
             - manage-user
-
-  /users/{userId}/roles/{roleName}:
+  "/users/{userId}/roles/{roleName}":
     delete:
       tags:
         - User Role Management
       operationId: denyRoleToUser
       summary: Removes a role from the user
-      description: Removes a role from a user. The role must exist in the system for the operation to be successful.
+      description: Removes a role from a user. The role must exist in the system for the
+        operation to be successful.
       parameters:
         - in: header
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: userId
-          type: string
           required: true
           description: The id of the user.
+          schema:
+            type: string
         - in: path
           name: roleName
-          type: string
           required: true
           description: The name of the role to revoke.
+          schema:
+            type: string
       responses:
-        204:
+        "204":
           description: The role has been revoked successfully from the user.
-        400:
+        "400":
           description: The user is not assigned to this role.
-        401:
+        "401":
           description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the 'manage-user' scope, or the provided role is not included in the current user's assignable roles.
-        404:
+        "403":
+          description: Bearer token is expired, or it doesn't have the 'manage-user' scope,
+            or the provided role is not included in the current user's
+            assignable roles.
+        "404":
           description: The user or the role do not exist.
       security:
         - auth:
             - manage-user
-
-definitions:
-  UserRegistrationRequest:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-        description: "user unique ID (UID)"
-      email:
-        type: string
-        format: email
-        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
-        description: "email used for registration"
-      firstName:
-        type: string
-        minLength: 1
-        description: "first name"
-      lastName:
-        type: string
-        minLength: 1
-        description: "last name"
-      roles:
-        type: array
-        items:
+servers:
+  - url: /api/v1
+components:
+  requestBodies:
+    RoleDefinitionArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/RoleDefinition"
+      description: the body of the User JSON object containing the fields to update.
+      required: true
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://authserver/login
+          tokenUrl: http://authserver/oauth2/token
+          scopes:
+            manage-user: allows modifying a User resource
+  schemas:
+    UserRegistrationRequest:
+      type: object
+      properties:
+        id:
           type: string
-        description: "The names of the roles to be assigned to the user"
-    required: [email, firstname, lastname]
+          format: uuid
+          description: user unique ID (UID)
+        email:
+          type: string
+          format: email
+          pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
+          description: email used for registration
+        firstName:
+          type: string
+          minLength: 1
+          description: first name
+        lastName:
+          type: string
+          minLength: 1
+          description: last name
+        roles:
+          type: array
+          items:
+            type: string
+          description: The names of the roles to be assigned to the user
+      required:
+        - email
+        - firstname
+        - lastname

@@ -1,78 +1,87 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: 1.0.13
   title: Dynamic Role Assignment API v1.0
-  description: >-
-basePath: /api/v1
+  description: ""
 tags:
   - name: Dynamic Role Assignment
-securityDefinitions:
-  auth:
-    type: oauth2
-    flow: accessCode
-    authorizationUrl: http://authserver/login
-    tokenUrl: http://authserver/oauth2/token
-    scopes:
-      manage-user: allows modifying a User resource
 paths:
   /account/role:
     post:
       tags:
         - Dynamic Role Assignment
       operationId: assignUserToRole
-      description: Assign the authenticated user to a role. The role is unique identified by its name.
+      description: >
+        Assign the authenticated user to a role. The role is unique identified
+        by its name.
       parameters:
         - in: header
           name: authorization
           description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
+            The access token granted to the client application after user
+            authentication. The role is assigned to the user the client
+            application is acting on behalf of.
           required: true
-          type: string
-        - in: body
-          name: request
-          required: true
-          description: the body of the User JSON object containing the fields to update.
           schema:
-            $ref: '#/definitions/RoleDefinition'
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleDefinition"
       responses:
-        201:
+        "201":
           description: The role assignment is successful.
-        400:
+        "400":
           description: Required parameters are missing or invalid.
-        401:
+        "401":
           description: Missing bearer token.
-        403:
+        "403":
           description: Bearer token is expired or does not have 'manage-role' scope.
-        412:
+        "412":
           description: User is already assigned to this role or the role does not exist.
     delete:
       tags:
         - Dynamic Role Assignment
       operationId: unassignUserFromRole
-      description: Removes the assignment of the authenticated user to the role, uniquely identified by its name.
+      description: >-
+        Removes the assignment of the authenticated user to the role, uniquely
+        identified by its name.
       parameters:
         - in: header
           name: authorization
           description: >-
-            The access token granted to the client application after user authentication. The role is unassigned from
-            the user the client application is acting on behalf of.
+            The access token granted to the client application after user
+            authentication. The role is unassigned from the user the client
+            application is acting on behalf of.
           required: true
-          type: string
-        - in: body
-          name: request
-          required: true
-          description: the body of the User JSON object containing the fields to update.
           schema:
-            $ref: '#/definitions/RoleDefinition'
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RoleDefinition"
       responses:
-        200:
+        "200":
           description: The role assignment is successfully removed.
-        400:
+        "400":
           description: Required parameters are missing or invalid.
-        401:
+        "401":
           description: Missing bearer token.
-        403:
+        "403":
           description: Bearer token is expired or does not have 'manage-role' scope.
-        412:
+        "412":
           description: User is not assigned to this role or the role does not exist.
+servers:
+  - url: /api/v1
+components:
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://authserver/login
+          tokenUrl: http://authserver/oauth2/token
+          scopes:
+            manage-user: allows modifying a User resource

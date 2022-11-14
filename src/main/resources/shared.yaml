@@ -1,14 +1,9 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: 1.0.13
   title: SIDAM API Shared Definitions
-basePath: /idam/api/shared/definitions
 tags:
   - name: Shared Definitions
-consumes:
-  - application/json
-produces:
-  - application/json
 paths:
   /shared/definitions:
     get:
@@ -18,254 +13,256 @@ paths:
         - name: _nothing_dont_call_this_endpoint
           in: query
           required: true
-          type: integer
-      responses:
-        '200':
-          description: Success
           schema:
-            type: string
+            type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
       tags:
         - Shared Definitions
-definitions:
-
-  RoleDefinition:
-    type: object
-    properties:
-      name:
-        type: string
-        minLength: 1
-        description: "Unique name of the role"
-    required: [name]
-
-  User:
-    title: User
-    type: object
-    properties:
-      id:
-        description: Unique ID for the user
-        type: string
-      forename:
-        description: The first name of the user
-        type: string
-        minLength: 1
-      surname:
-        description: The last name of the user
-        type: string
-        minLength: 1
-      email:
-        description: The email of the user
-        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
-        type: string
-      active:
-        description: Flag indicating whether the user is active (false means the user is suspended).
-        type: boolean
-      locked:
-        readOnly: true
-        description: Flag indicating whether the user is locked (false means the user is active).
-        type: boolean
-      pending:
-        description: Flag indicating whether the user is pending, i.e. registered but not activated yet.
-        type: boolean
-      stale:
-        description: Flag indicating whether the user is a stale user.
-        type: boolean
-      pwdAccountLockedTime:
-        description: Time the user's account is locked.
-        type: string
-      roles:
-        description: The list of the roles of the user
-        type: array
-        items:
+servers:
+  - url: /idam/api/shared/definitions
+components:
+  schemas:
+    RoleDefinition:
+      type: object
+      properties:
+        name:
           type: string
-      ssoProvider:
+          minLength: 1
+          description: Unique name of the role
+      required:
+        - name
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          description: Unique ID for the user
+          type: string
+        forename:
+          description: The first name of the user
+          type: string
+          minLength: 1
+        surname:
+          description: The last name of the user
+          type: string
+          minLength: 1
+        email:
+          description: The email of the user
+          pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
+          type: string
+        active:
+          description: Flag indicating whether the user is active (false means the user is
+            suspended).
+          type: boolean
+        locked:
+          readOnly: true
+          description: Flag indicating whether the user is locked (false means the user is
+            active).
+          type: boolean
+        pending:
+          description: Flag indicating whether the user is pending, i.e. registered but not
+            activated yet.
+          type: boolean
+        stale:
+          description: Flag indicating whether the user is a stale user.
+          type: boolean
+        pwdAccountLockedTime:
+          description: Time the user's account is locked.
+          type: string
+        roles:
+          description: The list of the roles of the user
+          type: array
+          items:
+            type: string
+        ssoProvider:
           description: The name of the SSO Provider the account was federated from.
           type: string
-      ssoId:
-          description: The ID of the account within the SSO Provider the account was federated from.
+        ssoId:
+          description: The ID of the account within the SSO Provider the account was
+            federated from.
           type: string
-      lastModified:
-        description: The date and time this user was last modified.
-        type: string
-      createDate:
-        description: The date and time this user was created.
-        type: string
-
-  ErrorMap:
-    title: ErrorMap
-    example:
-      code: 403
-      description: something went wrong
-    type: object
-    properties:
-      code:
-        description: The error code
-        type: string
-      description:
-        description: The description of the error
-        type: string
-    required:
-      - code
-
-  ArrayOfRoles:
-    type: array
-    items:
-      $ref: '#/definitions/Role'
-
-  Role:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Unique ID for the role
-      name:
-        type: string
-        description: The name of the role
-      description:
-        type: string
-        description: The description of the role
-      assignableRoles:
-        type: array
-        items:
+        lastModified:
+          description: The date and time this user was last modified.
           type: string
-        description: An array of roleIds representing assignable roles
-      conflictingRoles:
-        type: array
-        items:
+        createDate:
+          description: The date and time this user was created.
           type: string
-          description: An array of roleIds representing conflicting roles
-      linkedRoles:
-        type: array
-        items:
+    ErrorMap:
+      title: ErrorMap
+      example:
+        code: 403
+        description: something went wrong
+      type: object
+      properties:
+        code:
+          description: The error code
           type: string
-          description: An array of roleIds representing roles that should be assigned to the user together with the main role
-    required: [assignableRoles, conflictingRoles]
-
-  UpdateRole:
-    type: object
-    properties:
-      description:
-        type: string
-        description: The description of the role
-      assignableRoles:
-        type: array
-        items:
+        description:
+          description: The description of the error
           type: string
-        description: An array of roleIds representing assignable roles
-      conflictingRoles:
-        type: array
-        items:
+      required:
+        - code
+    Role:
+      type: object
+      properties:
+        id:
           type: string
-          description: An array of roleIds representing conflicting roles
-      linkedRoles:
-        type: array
-        items:
+          description: Unique ID for the role
+        name:
           type: string
-          description: An array of roleIds representing roles that should be assigned to the user together with the main role
-    required: [description, assignableRoles, conflictingRoles]
-
-  ArrayOfStrings:
-    type: array
-    items:
-      type: string
-
-  RoleDetail:
-    type: object
-    properties:
-      code:
-        type: string
-        description: the role code
-    required: [code]
-
-  PatchRequest:
-    type: array
-    items:
-      $ref: "#/definitions/PatchOperation"
-
-  PatchOperation:
-    description: Patch Request Object
-    required:
-      - "operation"
-      - "field"
-      - "value"
-    properties:
-      operation:
-        type: string
-        description: The operation of the patch
-        enum:
-          - "add"
-          - "remove"
-          - "replace"
-          - "move"
-          - "copy"
-          - "test"
-      field:
-        type: string
-        description: field in patch object
-      value:
-        type: object
-        description: The value to patch.
-
-  RegisterRequest:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-        description: "user unique ID (UID)"
-      email:
-        type: string
-        format: email
-        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
-        description: "email used for registration"
-      password:
-        type: string
-        description: "password used for login"
-      firstname:
-        type: string
-        description: "first name"
-      lastname:
-        type: string
-        description: "last name"
-      roles:
-        type: array
-        items:
+          description: The name of the role
+        description:
           type: string
-        description: "roles to grant"
-      services:
-        type: array
-        items:
+          description: The description of the role
+        assignableRoles:
+          type: array
+          items:
+            type: string
+          description: An array of roleIds representing assignable roles
+        conflictingRoles:
+          type: array
+          items:
+            type: string
+            description: An array of roleIds representing conflicting roles
+        linkedRoles:
+          type: array
+          items:
+            type: string
+            description: An array of roleIds representing roles that should be assigned to
+              the user together with the main role
+      required:
+        - assignableRoles
+        - conflictingRoles
+    UpdateRole:
+      type: object
+      properties:
+        description:
           type: string
-        description: "services to onboard"
-    required: [email, firstname, lastname]
-
-  SelfRegisterRequest:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-        description: "user unique ID (UID)"
-      email:
-        type: string
-        format: email
-        pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
-        description: "email used for registration"
-      firstName:
-        type: string
-        description: "first name"
-      lastName:
-        type: string
-        description: "last name"
-      redirectUri:
-        type: string
-        decription: "URI to redirect the user to after successful account activation. This URL
-        must match one of the registered URLs for the OAuth2 application linked to the service
-        initiating the registration journey."
-      clientId:
-        type: string
-        description: "The service client ID"
-      state:
-        type: string
-        description: "Optional state reference that will be added to the redirect URL and be
-        available for the target system after the user is activated"
-    required: [email, firstname, lastname]
+          description: The description of the role
+        assignableRoles:
+          type: array
+          items:
+            type: string
+          description: An array of roleIds representing assignable roles
+        conflictingRoles:
+          type: array
+          items:
+            type: string
+            description: An array of roleIds representing conflicting roles
+        linkedRoles:
+          type: array
+          items:
+            type: string
+            description: An array of roleIds representing roles that should be assigned to
+              the user together with the main role
+      required:
+        - description
+        - assignableRoles
+        - conflictingRoles
+    RoleDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: the role code
+      required:
+        - code
+    PatchOperation:
+      description: Patch Request Object
+      required:
+        - operation
+        - field
+        - value
+      properties:
+        operation:
+          type: string
+          description: The operation of the patch
+          enum:
+            - add
+            - remove
+            - replace
+            - move
+            - copy
+            - test
+        field:
+          type: string
+          description: field in patch object
+        value:
+          type: object
+          description: The value to patch.
+    RegisterRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: user unique ID (UID)
+        email:
+          type: string
+          format: email
+          pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
+          description: email used for registration
+        password:
+          type: string
+          description: password used for login
+        firstname:
+          type: string
+          description: first name
+        lastname:
+          type: string
+          description: last name
+        roles:
+          type: array
+          items:
+            type: string
+          description: roles to grant
+        services:
+          type: array
+          items:
+            type: string
+          description: services to onboard
+      required:
+        - email
+        - firstname
+        - lastname
+    SelfRegisterRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: user unique ID (UID)
+        email:
+          type: string
+          format: email
+          pattern: ^[^()!&/;%*@\s]+@[^()!&/;%*@\s]+\.[^()!&/;%*@\s]+$
+          description: email used for registration
+        firstName:
+          type: string
+          description: first name
+        lastName:
+          type: string
+          description: last name
+        redirectUri:
+          type: string
+          description: URI to redirect the user to after successful account activation.
+            This URL must match one of the registered URLs for the OAuth2
+            application linked to the service initiating the registration
+            journey.
+        clientId:
+          type: string
+          description: The service client ID
+        state:
+          type: string
+          description: Optional state reference that will be added to the redirect URL and
+            be available for the target system after the user is activated
+      required:
+        - email
+        - firstname
+        - lastname

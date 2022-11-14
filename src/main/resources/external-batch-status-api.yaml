@@ -1,18 +1,10 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: 1.0.0
   title: Batch Status API v1.0
-  description: >-
-basePath: /api/v1
+  description: ""
 tags:
   - name: Batch Status
-securityDefinitions:
-  auth:
-    type: oauth2
-    flow: accessCode
-    authorizationUrl: http://authserver/login
-    tokenUrl: http://authserver/oauth2/token
-
 paths:
   /api/v1/batch:
     get:
@@ -23,50 +15,55 @@ paths:
       parameters:
         - in: header
           name: authorization
-          description: >-
-            The access token associated to the session.
-            IDAM_SYSTEM_OWNER role is required.
+          description: The access token associated to the session. IDAM_SYSTEM_OWNER role
+            is required.
           required: true
-          type: string
+          schema:
+            type: string
         - in: query
           name: status
           required: false
           description: Optional parameter allowing filtering by batch status.
-          type: string
+          schema:
+            type: string
         - in: query
           name: clientId
           required: false
           description: Optional parameter allowing filtering by clientId.
-          type: string
+          schema:
+            type: string
         - name: size
           in: query
           description: The number of items per page, default of 20
           required: false
-          type: integer
-          format: int32
-          x-example: 20
+          example: 20
+          schema:
+            type: integer
+            format: int32
         - name: page
           in: query
           description: The index of the page of items, starting at 0 for the first page
           required: false
-          type: integer
-          format: int32
-          x-example: 10
-      responses:
-        200:
-          description: Request accepted.
+          example: 10
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/BatchResponse'
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the required scopes.
-        400:
+            type: integer
+            format: int32
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            "*/*":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/BatchResponse"
+        "400":
           description: Parameters are invalid.
-
-  /api/v1/batch/{batchId}:
+        "401":
+          description: Missing bearer token.
+        "403":
+          description: Bearer token is expired, or it doesn't have the required scopes.
+  "/api/v1/batch/{batchId}":
     get:
       tags:
         - Batch Status
@@ -77,26 +74,29 @@ paths:
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: batchId
-          type: string
           required: true
           description: The id of the batch process.
-      responses:
-        200:
-          description: Request accepted.
           schema:
-            $ref: '#/definitions/BatchStatusResponse'
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the required scopes.
-        404:
-          description: Batch not found.
-        400:
+            type: string
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/BatchStatusResponse"
+        "400":
           description: Required parameters are missing or invalid.
-
+        "401":
+          description: Missing bearer token.
+        "403":
+          description: Bearer token is expired, or it doesn't have the required scopes.
+        "404":
+          description: Batch not found.
     post:
       tags:
         - Batch Status
@@ -107,26 +107,29 @@ paths:
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: batchId
-          type: string
           required: true
           description: The id of the batch process.
-      responses:
-        200:
-          description: Request accepted.
           schema:
-            $ref: '#/definitions/BatchResponse'
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the required scopes.
-        404:
-          description: Batch not found.
-        400:
+            type: string
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/BatchResponse"
+        "400":
           description: Required parameters are missing or invalid.
-
+        "401":
+          description: Missing bearer token.
+        "403":
+          description: Bearer token is expired, or it doesn't have the required scopes.
+        "404":
+          description: Batch not found.
     delete:
       tags:
         - Batch Status
@@ -137,88 +140,107 @@ paths:
           name: authorization
           description: The access token associated to the session.
           required: true
-          type: string
+          schema:
+            type: string
         - in: path
           name: batchId
-          type: string
           required: true
           description: The id of the batch process.
+          schema:
+            type: string
       responses:
-        204:
+        "204":
           description: Success.
-        401:
-          description: Missing bearer token.
-        403:
-          description: Bearer token is expired, or it doesn't have the required scopes.
-        404:
-          description: Batch not found.
-        400:
+        "400":
           description: Required parameters are missing or invalid.
-
-definitions:
-  BatchResponse:
-    type: object
-    properties:
-      id:
-        type: string
-        description: Batch Unique ID
-      state:
-        type: string
-        enum: [ ACCEPTED, IN_PROGRESS, COMPLETE, CANCELLED ]
-      creationDate:
-        type: string
-        description: DateTime this was created.
-      lastModifiedDate:
-        type: string
-        description: DateTime this was last updated created.
-      requestClientId:
-        type: string
-        description: Client ID in the access_token used for the request.
-      requestUserId:
-        type: string
-        description: User ID of the requestor.
-      processorId:
-        type: string
-        description: ID of the batch processor that has picked up the batch for processing.
-
-  BatchStatusResponse:
-    type: object
-    properties:
-      createdAt:
-        type: string
-        description: "A timestamp of the created datetime of the batch process"
-      status:
-        type: string
-        enum: [ACCEPTED, IN_PROGRESS, COMPLETE, CANCELLED]
-      totalRequests:
-        type: integer
-        description: "Total number of requested operations"
-      success:
-        type: integer
-        description: "Total number of successful requested operations processed"
-      failed:
-        type: integer
-        description: "Total number of failed requested operations processed"
-      response:
-        type: array
-        items:
-          $ref: '#/definitions/BatchRequestResponseItem'
-        description: "The names of the roles to be assigned to the user"
-
-  BatchRequestResponseItem:
-    type: object
-    properties:
-      statusCode:
-        type: integer
-        description: "The status code response for the processed request."
-      status:
-        type: string
-        description: "The status response message of the processed request."
-      path:
-        type: string
-        description: "A location where the processed item may be retrieved."
-      errorMessages:
-        type: array
-        description: "An array of reasons as to why the request failed"
-        items:
+        "401":
+          description: Missing bearer token.
+        "403":
+          description: Bearer token is expired, or it doesn't have the required scopes.
+        "404":
+          description: Batch not found.
+servers:
+  - url: /api/v1
+components:
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://authserver/login
+          tokenUrl: http://authserver/oauth2/token
+          scopes: {}
+  schemas:
+    BatchResponse:
+      type: object
+      properties:
+        id:
           type: string
+          description: Batch Unique ID
+        state:
+          type: string
+          enum:
+            - ACCEPTED
+            - IN_PROGRESS
+            - COMPLETE
+            - CANCELLED
+        creationDate:
+          type: string
+          description: DateTime this was created.
+        lastModifiedDate:
+          type: string
+          description: DateTime this was last updated created.
+        requestClientId:
+          type: string
+          description: Client ID in the access_token used for the request.
+        requestUserId:
+          type: string
+          description: User ID of the requestor.
+        processorId:
+          type: string
+          description: ID of the batch processor that has picked up the batch for
+            processing.
+    BatchStatusResponse:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          description: A timestamp of the created datetime of the batch process
+        status:
+          type: string
+          enum:
+            - ACCEPTED
+            - IN_PROGRESS
+            - COMPLETE
+            - CANCELLED
+        totalRequests:
+          type: integer
+          description: Total number of requested operations
+        success:
+          type: integer
+          description: Total number of successful requested operations processed
+        failed:
+          type: integer
+          description: Total number of failed requested operations processed
+        response:
+          type: array
+          items:
+            $ref: "#/components/schemas/BatchRequestResponseItem"
+          description: The names of the roles to be assigned to the user
+    BatchRequestResponseItem:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          description: The status code response for the processed request.
+        status:
+          type: string
+          description: The status response message of the processed request.
+        path:
+          type: string
+          description: A location where the processed item may be retrieved.
+        errorMessages:
+          type: array
+          description: An array of reasons as to why the request failed
+          items:
+            type: string

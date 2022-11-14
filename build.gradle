@@ -1,21 +1,24 @@
-import io.swagger.codegen.DefaultGenerator
-import io.swagger.codegen.config.CodegenConfigurator
+import org.openapitools.codegen.DefaultGenerator
+import org.openapitools.codegen.config.CodegenConfigurator
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'io.swagger:swagger-codegen:2.4.2'
+        classpath "org.openapitools:openapi-generator-gradle-plugin:6.2.1"
     }
 }
 
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'org.openapi.generator' version '6.2.1'
 }
 
-version = '3.10.2'
+apply plugin: 'org.openapi.generator'
+
+version = '4.0.0-BETA-1'
 
 group = 'uk.gov.hmcts.reform.idam'
 
@@ -31,7 +34,6 @@ tasks.withType(JavaCompile) {
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
-    jcenter()
 }
 
 configurations {
@@ -40,35 +42,37 @@ configurations {
 }
 
 dependencies {
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.6'
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.6.6'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.5'
+    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.7.5'
     generatedCompile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
     generatedCompile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
     generatedCompile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     generatedCompile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.2'
+    generatedCompile group: 'org.openapitools', name: 'jackson-databind-nullable', version: '0.2.4'
 }
 
 project.ext {
-    swaggerTargetFolder = 'src/generated/java'
+    generatedApiTargetFolder = 'src/generated/java'
 }
 
 def generateCodeFromSwagger(swaggerSourceFile, packageName, importMappings) {
     def config = new CodegenConfigurator()
     config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
     config.setOutputDir("$buildDir")
-    config.setLang('spring')
+    config.setGeneratorName('spring')
+    config.setValidateSpec(false)
     config.setAdditionalProperties([
             'generateApis'                 : 'false',
             'interfaceOnly'                : 'true',
             'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api.' + packageName,
             'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.' + packageName +'.model',
-            'sourceFolder'                 : project.swaggerTargetFolder,
+            'sourceFolder'                 : project.generatedApiTargetFolder,
             'dateLibrary'                  : 'java8',
             'useTags'                      : (packageName == 'external' ? 'true' : 'false'),
             'generateModelDocumentation'   : 'false'
     ])
     if (importMappings != null) {
-        ((LinkedHashMap<String, String>) importMappings).each { k, v -> config.addImportMapping(k, v) }
+        ((LinkedHashMap<String, String>) importMappings).forEach { k, v -> config.addImportMapping(k, v) }
     }
     new DefaultGenerator().opts(config.toClientOptInput()).generate()
 }
@@ -83,9 +87,7 @@ task generateApi {
         generateCodeFromSwagger('src/main/resources/internal-admin-api.yaml', 'internal', [
                 'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
                 'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap',
-                'ArrayOfRoles' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfRoles',
                 'Role' : 'uk.gov.hmcts.reform.idam.api.shared.model.Role',
-                'ArrayOfStrings' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfStrings',
                 'RoleDetail' : 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDetail',
                 'UpdateRole' : 'uk.gov.hmcts.reform.idam.api.shared.model.UpdateRole',
                 'PatchRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.PatchRequest',
@@ -101,7 +103,7 @@ task generateApi {
         ])
 
         generateCodeFromSwagger('src/main/resources/external-sso-api.yaml', 'external', [
-            'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User'
+                'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User'
         ])
 
         generateCodeFromSwagger('src/main/resources/external-dynamic-role-assign-api.yaml', 'external', [
@@ -120,7 +122,7 @@ task generateApi {
 sourceSets {
     generated {
         java {
-            srcDirs "$buildDir/$swaggerTargetFolder"
+            srcDirs "$buildDir/$generatedApiTargetFolder"
         }
     }
 }

@@ -1,19 +1,10 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   version: 1.0.0
   title: Policies API v1.0
-  description: >-
-basePath: /api/v1
+  description: ""
 tags:
   - name: Policy
-securityDefinitions:
-  auth:
-    type: oauth2
-    flow: accessCode
-    authorizationUrl: http://authserver/login
-    tokenUrl: http://authserver/oauth2/token
-    scopes:
-      manage-user: allows modifying a User resource
 paths:
   /policies/evaluate:
     post:
@@ -21,22 +12,24 @@ paths:
         - Policy
       operationId: evaluate
       description: Evaluate policies
-      parameters:
-        - in: body
-          name: request
-          required: true
-          schema:
-            $ref: '#/definitions/EvaluatePoliciesRequest'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EvaluatePoliciesRequest"
+        required: true
       responses:
-        200:
+        "200":
           description: Success
-          schema:
-            $ref: '#/definitions/EvaluatePoliciesResponse'
-        400:
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/EvaluatePoliciesResponse"
+        "400":
           description: Required parameters are missing or invalid.
-        401:
+        "401":
           description: Missing bearer token.
-        500:
+        "500":
           description: Unexpected server error happened during the process
   /policies:
     get:
@@ -48,19 +41,22 @@ paths:
       parameters:
         - in: header
           name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
+          description: The access token granted to the client application after user
+            authentication. The role is assigned to the user the client
+            application is acting on behalf of.
           required: true
-          type: string
-      responses:
-        200:
-          description: Success
           schema:
-            $ref: '#/definitions/GetAllPoliciesResponse'
-        401:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/GetAllPoliciesResponse"
+        "401":
           description: Missing bearer token.
-        500:
+        "500":
           description: Unexpected server error happened during the process
     post:
       summary: Create Policy with Client-Assigned ID
@@ -71,46 +67,64 @@ paths:
       parameters:
         - in: header
           name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
-          required: true
-          type: string
-        - in: body
-          name: requestPayload
+          description: The access token granted to the client application after user
+            authentication. The role is assigned to the user the client
+            application is acting on behalf of.
           required: true
           schema:
-            $ref: '#/definitions/PostPolicyRequest'
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostPolicyRequest"
+        required: true
       responses:
-        201:
+        "201":
           description: Success
-          schema:
-            $ref: '#/definitions/PostPolicyResponse'
           headers:
             Location:
-              type: string
               description: Resource location in response to successful create operation.
-        400:
-          description: |-
+              schema:
+                type: string
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/PostPolicyResponse"
+        "400":
+          description: >-
             Bad request error. The cause can be the following:
+
             * Missing privilege name
+
             * Invalid json provided in the request
+
             * Invalid value found in json
+
             * Invalid policy name provided in json
+
             * Resource name and JSON body name do not match
+
             * Query id missing UID
+
             * Invalid query id
+
             * Invalid search filter
+
             * Empty privilege name
+
             * Entitlement value was NULL
+
             * No resource type was expected
+
             * Policy defines invalid resource type
+
             * The provided resourceId does not match to the UUID in the json file
-        401:
+        "401":
           description: Missing bearer token.
-        500:
+        "500":
           description: Unexpected server error happened during the process
-  /policies/{resourceId}:
+  "/policies/{resourceId}":
     put:
       summary: Create Policy with Client-Assigned ID
       operationId: put
@@ -120,49 +134,68 @@ paths:
       parameters:
         - in: header
           name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
+          description: The access token granted to the client application after user
+            authentication. The role is assigned to the user the client
+            application is acting on behalf of.
           required: true
-          type: string
+          schema:
+            type: string
         - name: resourceId
           in: path
           description: The unique identifier of the policy
           required: true
-          type: string
-        - in: body
-          name: requestPayload
-          required: true
           schema:
-            $ref: '#/definitions/PutPolicyRequest'
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PutPolicyRequest"
+        required: true
       responses:
-        200:
+        "200":
           description: Success
-          schema:
-            $ref: '#/definitions/PutPolicyResponse'
           headers:
             Location:
-              type: string
               description: Resource location in response to successful create operation.
-        400:
-          description: |-
+              schema:
+                type: string
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/PutPolicyResponse"
+        "400":
+          description: >-
             Bad request error. The cause can be the following:
+
             * Missing privilege name
+
             * Invalid json provided in the request
+
             * Invalid value found in json
+
             * Invalid policy name provided in json
+
             * Resource name and JSON body name do not match
+
             * Query id missing UID
+
             * Invalid query id
+
             * Invalid search filter
+
             * Empty privilege name
+
             * Entitlement value was NULL
+
             * No resource type was expected
+
             * Policy defines invalid resource type
+
             * The provided resourceId does not match to the UUID in the json file
-        401:
+        "401":
           description: Missing bearer token.
-        500:
+        "500":
           description: Unexpected server error happened during the process
     get:
       summary: Get policy
@@ -173,26 +206,30 @@ paths:
       parameters:
         - in: header
           name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
+          description: The access token granted to the client application after user
+            authentication. The role is assigned to the user the client
+            application is acting on behalf of.
           required: true
-          type: string
+          schema:
+            type: string
         - name: resourceId
           in: path
           description: The unique identifier of the policy
           required: true
-          type: string
-      responses:
-        200:
-          description: Success
           schema:
-            $ref: '#/definitions/GetPolicyResponse'
-        401:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/GetPolicyResponse"
+        "401":
           description: Missing bearer token.
-        404:
+        "404":
           description: Policy not found
-        500:
+        "500":
           description: Unexpected server error happened during the process
     delete:
       summary: Delete
@@ -203,530 +240,614 @@ paths:
       parameters:
         - in: header
           name: authorization
-          description: >-
-            The access token granted to the client application after user authentication. The role is assigned to
-            the user the client application is acting on behalf of.
+          description: The access token granted to the client application after user
+            authentication. The role is assigned to the user the client
+            application is acting on behalf of.
           required: true
-          type: string
+          schema:
+            type: string
         - name: resourceId
           in: path
           description: The unique identifier of the policy
           required: true
-          type: string
-      responses:
-        200:
-          description: Success
           schema:
-            $ref: '#/definitions/DeletePolicyResponse'
-        400:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/DeletePolicyResponse"
+        "400":
           description: Bad request error
-        401:
+        "401":
           description: Missing bearer token.
-        404:
+        "404":
           description: Policy not found
-        500:
+        "500":
           description: Unexpected server error happened during the process
-definitions:
-  ActionMap:
-    title: Action values
-    description: 'Set of string action names, each set to a boolean indicating whether the action is allowed. Chosen from the available actions provided by the associated Managing Resource Types resource type'
-    type: string
-    additionalProperties:
-      type: object
-  ConditionMap:
-    title: Condition
-    description: 'Specifies environment conditions, where conditions can be combined by using the built-in types "AND", "OR", and "NOT", and where condition implementations are pluggable'
-    type: string
-    additionalProperties:
-      type: object
-  SubjectMap:
-    title: Subject
-    description: 'Specifies the subject conditions to which the policy applies, where subjects can be combined by using the built-in types "AND", "OR", and "NOT", and where subject implementations are pluggable'
-    type: string
-    additionalProperties:
-      type: object
-  GetAllPoliciesResponse:
-    title: Query Response
-    type: object
-    properties:
-      resultCount:
-        type: integer
-        format: int32
-        default: 0
-        description: Count of individual result items
-      result:
-        type: array
-        description: Array of matching items
-        items:
-          title: Policy Resource Schema
-          description: Json schema for the policy resource
-          type: object
-          properties:
-            name:
-              type: string
-              title: Name
-              description: String matching the name of the application
-            active:
-              type: boolean
-              title: Active flag
-              description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
-            description:
-              type: string
-              title: Description
-              description: String describing the policy
-            applicationName:
-              type: string
-              title: Application name
-              description: 'String containing the application name, such as "iPlanetAMWebAgentService", or "mypolicyset"'
-            actionValues:
-              $ref: '#/definitions/ActionMap'
-            resources:
-              type: array
-              items:
-                type: string
-              title: Resources
-              description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
-            subject:
-              $ref: '#/definitions/SubjectMap'
-            condition:
-              $ref: '#/definitions/ConditionMap'
-            resourceTypeUuid:
-              type: string
-              title: Resource Type UUID
-              description: The UUIDs of the resource type associated with the policy
-            resourceAttributes:
-              type: array
-              items:
-                type: object
-              title: Resource Attributes
-              description: List of attributes to return with decisions. These attributes are known as response attributes
-            lastModifiedBy:
-              type: string
-              title: Last Modified By
-              description: A string containing the universal identifier DN of the subject that most recently updated the policy
-            lastModifiedDate:
-              type: string
-              title: Last Modified date
-              description: 'An integer containing the last modified date and time, in number of seconds'
-            createdBy:
-              type: string
-              title: Created By
-              description: A string containing the universal identifier DN of the subject that created the policy
-            creationDate:
-              type: string
-              title: Creation Date
-              description: 'An integer containing the creation date and time, in number of seconds'
-  GetPolicyResponse:
-    title: Policy Resource Schema
-    description: Json schema for the policy resource
-    type: object
-    properties:
-      name:
-        type: string
-        title: Name
-        description: String matching the name of the application
-      active:
-        type: boolean
-        title: Active flag
-        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
-      description:
-        type: string
-        title: Description
-        description: String describing the policy
-      applicationName:
-        type: string
-        title: Application name
-        description: 'String containing the application name, such as "HmctsPolicySet"'
-      actionValues:
-        $ref: '#/definitions/ActionMap'
-      resources:
-        type: array
-        items:
-          type: string
-        title: Resources
-        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
-      subject:
-        $ref: '#/definitions/SubjectMap'
-      condition:
-        $ref: '#/definitions/ConditionMap'
-      resourceTypeUuid:
-        type: string
-        title: Resource Type UUID
-        description: The UUIDs of the resource type associated with the policy
-      resourceAttributes:
-        type: array
-        items:
-          type: object
-        title: Resource Attributes
-        description: List of attributes to return with decisions. These attributes are known as response attributes
-      lastModifiedBy:
-        type: string
-        title: Last Modified By
-        description: A string containing the universal identifier DN of the subject that most recently updated the policy
-      lastModifiedDate:
-        type: string
-        title: Last Modified date
-        description: 'An integer containing the last modified date and time, in number of seconds'
-      createdBy:
-        type: string
-        title: Created By
-        description: A string containing the universal identifier DN of the subject that created the policy
-      creationDate:
-        type: string
-        title: Creation Date
-        description: 'An integer containing the creation date and time, in number of seconds'
-  DeletePolicyResponse:
-    title: Policy Resource Schema
-    description: Json schema for the policy resource
-    type: object
-    properties:
-      name:
-        type: string
-        title: Name
-        description: String matching the name of the application
-      active:
-        type: boolean
-        title: Active flag
-        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
-      description:
-        type: string
-        title: Description
-        description: String describing the policy
-      applicationName:
-        type: string
-        title: Application name
-        description: 'String containing the application name, such as "HmctsPolicySet"'
-      actionValues:
-        $ref: '#/definitions/ActionMap'
-      resources:
-        type: array
-        items:
-          type: string
-        title: Resources
-        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
-      subject:
-        $ref: '#/definitions/SubjectMap'
-      condition:
-        $ref: '#/definitions/ConditionMap'
-      resourceTypeUuid:
-        type: string
-        title: Resource Type UUID
-        description: The UUIDs of the resource type associated with the policy
-      resourceAttributes:
-        type: array
-        items:
-          type: object
-        title: Resource Attributes
-        description: List of attributes to return with decisions. These attributes are known as response attributes
-      lastModifiedBy:
-        type: string
-        title: Last Modified By
-        description: A string containing the universal identifier DN of the subject that most recently updated the policy
-      lastModifiedDate:
-        type: string
-        title: Last Modified date
-        description: 'An integer containing the last modified date and time, in number of seconds'
-      createdBy:
-        type: string
-        title: Created By
-        description: A string containing the universal identifier DN of the subject that created the policy
-      creationDate:
-        type: string
-        title: Creation Date
-        description: 'An integer containing the creation date and time, in number of seconds'
-  EvaluatePoliciesRequest:
-    title: Evaluate Request
-    description: Evaluate Request
-    type: object
-    required:
-      - application
-      - resources
-    properties:
-      resources:
-        type: array
-        items:
-          type: string
-        title: Resources
-        description: Specifies the list of resources for which to return decisions
-      application:
-        type: string
-        title: Application
-        description: 'String containing the application name, such as "HmctsPolicySet"'
-      subject:
+servers:
+  - url: /api/v1
+components:
+  securitySchemes:
+    auth:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: http://authserver/login
+          tokenUrl: http://authserver/oauth2/token
+          scopes:
+            manage-user: allows modifying a User resource
+  schemas:
+    ActionMap:
+      title: Action values
+      description: Set of string action names, each set to a boolean indicating whether the
+        action is allowed. Chosen from the available actions provided by the
+        associated Managing Resource Types resource type
+      type: string
+      additionalProperties:
         type: object
-        properties:
-          ssoToken:
-            type: string
-            title: SSOToken
-            description: The value is the SSO token ID string for the subject
-          jwt:
-            type: string
-            title: JWT
-            description: The value is a JWT string
-          claims:
-            type: object
-            title: Claims
-            description: The value is an object (map) of JWT claims to their values.
-        title: Subject
-        description: 'Holds an object that represents the subject. You can specify one or more of the following keys. If you specify multiple keys, the subject can have multiple associated principals, and you can use subject conditions corresponding to any type in the request'
-      environment:
+    ConditionMap:
+      title: Condition
+      description: Specifies environment conditions, where conditions can be combined by
+        using the built-in types "AND", "OR", and "NOT", and where condition
+        implementations are pluggable
+      type: string
+      additionalProperties:
         type: object
-        title: Environment
-        description: Holds a map of keys to lists of values
-  EvaluatePoliciesResponse:
-    type: array
-    title: Evaluate and evaluateTree schema response
-    description: Evaluate and evaluateTree schema response
-    items:
+    SubjectMap:
+      title: Subject
+      description: Specifies the subject conditions to which the policy applies, where
+        subjects can be combined by using the built-in types "AND", "OR", and
+        "NOT", and where subject implementations are pluggable
+      type: string
+      additionalProperties:
+        type: object
+    GetAllPoliciesResponse:
+      title: Query Response
       type: object
       properties:
-        resource:
+        resultCount:
+          type: integer
+          format: int32
+          default: 0
+          description: Count of individual result items
+        result:
+          type: array
+          description: Array of matching items
+          items:
+            title: Policy Resource Schema
+            description: Json schema for the policy resource
+            type: object
+            properties:
+              name:
+                type: string
+                title: Name
+                description: String matching the name of the application
+              active:
+                type: boolean
+                title: Active flag
+                description: Boolean indicating whether OpenAM considers the policy active
+                  for evaluation purposes, defaults to false
+              description:
+                type: string
+                title: Description
+                description: String describing the policy
+              applicationName:
+                type: string
+                title: Application name
+                description: String containing the application name, such as
+                  "iPlanetAMWebAgentService", or "mypolicyset"
+              actionValues:
+                $ref: "#/components/schemas/ActionMap"
+              resources:
+                type: array
+                items:
+                  type: string
+                title: Resources
+                description: List of the resource name pattern strings to which the policy
+                  applies. Must conform to the pattern templates provided by the
+                  associated Managing Resource Types resource type
+              subject:
+                $ref: "#/components/schemas/SubjectMap"
+              condition:
+                $ref: "#/components/schemas/ConditionMap"
+              resourceTypeUuid:
+                type: string
+                title: Resource Type UUID
+                description: The UUIDs of the resource type associated with the policy
+              resourceAttributes:
+                type: array
+                items:
+                  type: object
+                title: Resource Attributes
+                description: List of attributes to return with decisions. These attributes
+                  are known as response attributes
+              lastModifiedBy:
+                type: string
+                title: Last Modified By
+                description: A string containing the universal identifier DN of the subject
+                  that most recently updated the policy
+              lastModifiedDate:
+                type: string
+                title: Last Modified date
+                description: An integer containing the last modified date and time, in
+                  number of seconds
+              createdBy:
+                type: string
+                title: Created By
+                description: A string containing the universal identifier DN of the subject
+                  that created the policy
+              creationDate:
+                type: string
+                title: Creation Date
+                description: An integer containing the creation date and time, in number of
+                  seconds
+    GetPolicyResponse:
+      title: Policy Resource Schema
+      description: Json schema for the policy resource
+      type: object
+      properties:
+        name:
           type: string
-          title: Resource
-          description: Specifies the root resource for the decisions to return
-        actions:
-          $ref: '#/definitions/ActionMap'
-        attributes:
-          type: object
-          title: Attributes
-          description: 'A map of attribute names to their values, if any response attributes are returned according to applicable policies'
-        advices:
-          type: object
-          title: Advices
-          description: 'A map of advice names to their values, if any advice is returned according to applicable policies'
-  PostPolicyRequest:
-    title: Policy Resource Schema
-    description: Json schema for the policy resource
-    type: object
-    properties:
-      name:
-        type: string
-        title: Name
-        description: String matching the name of the application
-      active:
-        type: boolean
-        title: Active flag
-        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
-      description:
-        type: string
-        title: Description
-        description: String describing the policy
-      applicationName:
-        type: string
-        title: Application name
-        description: 'String containing the application name, such as "HmctsPolicySet"'
-      actionValues:
-        $ref: '#/definitions/ActionMap'
-      resources:
-        type: array
-        items:
+          title: Name
+          description: String matching the name of the application
+        active:
+          type: boolean
+          title: Active flag
+          description: Boolean indicating whether OpenAM considers the policy active for
+            evaluation purposes, defaults to false
+        description:
           type: string
-        title: Resources
-        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
-      subject:
-        $ref: '#/definitions/SubjectMap'
-      condition:
-        $ref: '#/definitions/ConditionMap'
-      resourceTypeUuid:
-        type: string
-        title: Resource Type UUID
-        description: The UUIDs of the resource type associated with the policy
-      resourceAttributes:
-        type: array
-        items:
-          type: object
-        title: Resource Attributes
-        description: List of attributes to return with decisions. These attributes are known as response attributes
-      lastModifiedBy:
-        type: string
-        title: Last Modified By
-        description: A string containing the universal identifier DN of the subject that most recently updated the policy
-      lastModifiedDate:
-        type: string
-        title: Last Modified date
-        description: 'An integer containing the last modified date and time, in number of seconds'
-      createdBy:
-        type: string
-        title: Created By
-        description: A string containing the universal identifier DN of the subject that created the policy
-      creationDate:
-        type: string
-        title: Creation Date
-        description: 'An integer containing the creation date and time, in number of seconds'
-  PostPolicyResponse:
-    title: Policy Resource Schema
-    description: Json schema for the policy resource
-    type: object
-    properties:
-      name:
-        type: string
-        title: Name
-        description: String matching the name of the application
-      active:
-        type: boolean
-        title: Active flag
-        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
-      description:
-        type: string
-        title: Description
-        description: String describing the policy
-      applicationName:
-        type: string
-        title: Application name
-        description: 'String containing the application name, such as "HmctsPolicySet"'
-      actionValues:
-        $ref: '#/definitions/ActionMap'
-      resources:
-        type: array
-        items:
+          title: Description
+          description: String describing the policy
+        applicationName:
           type: string
-        title: Resources
-        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
-      subject:
-        $ref: '#/definitions/SubjectMap'
-      condition:
-        $ref: '#/definitions/ConditionMap'
-      resourceTypeUuid:
-        type: string
-        title: Resource Type UUID
-        description: The UUIDs of the resource type associated with the policy
-      resourceAttributes:
-        type: array
-        items:
-          type: object
-        title: Resource Attributes
-        description: List of attributes to return with decisions. These attributes are known as response attributes
-      lastModifiedBy:
-        type: string
-        title: Last Modified By
-        description: A string containing the universal identifier DN of the subject that most recently updated the policy
-      lastModifiedDate:
-        type: string
-        title: Last Modified date
-        description: 'An integer containing the last modified date and time, in number of seconds'
-      createdBy:
-        type: string
-        title: Created By
-        description: A string containing the universal identifier DN of the subject that created the policy
-      creationDate:
-        type: string
-        title: Creation Date
-        description: 'An integer containing the creation date and time, in number of seconds'
-  PutPolicyRequest:
-    title: Policy Resource Schema
-    description: Json schema for the policy resource
-    type: object
-    properties:
-      name:
-        type: string
-        title: Name
-        description: String matching the name of the application
-      active:
-        type: boolean
-        title: Active flag
-        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
-      description:
-        type: string
-        title: Description
-        description: String describing the policy
-      applicationName:
-        type: string
-        title: Application name
-        description: 'String containing the application name, such as "HmctsPolicySet"'
-      actionValues:
-        $ref: '#/definitions/ActionMap'
-      resources:
-        type: array
-        items:
+          title: Application name
+          description: String containing the application name, such as "HmctsPolicySet"
+        actionValues:
+          $ref: "#/components/schemas/ActionMap"
+        resources:
+          type: array
+          items:
+            type: string
+          title: Resources
+          description: List of the resource name pattern strings to which the policy
+            applies. Must conform to the pattern templates provided by the
+            associated Managing Resource Types resource type
+        subject:
+          $ref: "#/components/schemas/SubjectMap"
+        condition:
+          $ref: "#/components/schemas/ConditionMap"
+        resourceTypeUuid:
           type: string
-        title: Resources
-        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
-      subject:
-        $ref: '#/definitions/SubjectMap'
-      condition:
-        $ref: '#/definitions/ConditionMap'
-      resourceTypeUuid:
-        type: string
-        title: Resource Type UUID
-        description: The UUIDs of the resource type associated with the policy
-      resourceAttributes:
-        type: array
-        items:
-          type: object
-        title: Resource Attributes
-        description: List of attributes to return with decisions. These attributes are known as response attributes
-      lastModifiedBy:
-        type: string
-        title: Last Modified By
-        description: A string containing the universal identifier DN of the subject that most recently updated the policy
-      lastModifiedDate:
-        type: string
-        title: Last Modified date
-        description: 'An integer containing the last modified date and time, in number of seconds'
-      createdBy:
-        type: string
-        title: Created By
-        description: A string containing the universal identifier DN of the subject that created the policy
-      creationDate:
-        type: string
-        title: Creation Date
-        description: 'An integer containing the creation date and time, in number of seconds'
-  PutPolicyResponse:
-    title: Policy Resource Schema
-    description: Json schema for the policy resource
-    type: object
-    properties:
-      name:
-        type: string
-        title: Name
-        description: String matching the name of the application
-      active:
-        type: boolean
-        title: Active flag
-        description: 'Boolean indicating whether OpenAM considers the policy active for evaluation purposes, defaults to false'
-      description:
-        type: string
-        title: Description
-        description: String describing the policy
-      applicationName:
-        type: string
-        title: Application name
-        description: 'String containing the application name, such as "HmctsPolicySet"'
-      actionValues:
-        $ref: '#/definitions/ActionMap'
-      resources:
-        type: array
-        items:
+          title: Resource Type UUID
+          description: The UUIDs of the resource type associated with the policy
+        resourceAttributes:
+          type: array
+          items:
+            type: object
+          title: Resource Attributes
+          description: List of attributes to return with decisions. These attributes are
+            known as response attributes
+        lastModifiedBy:
           type: string
-        title: Resources
-        description: List of the resource name pattern strings to which the policy applies. Must conform to the pattern templates provided by the associated Managing Resource Types resource type
-      subject:
-        $ref: '#/definitions/SubjectMap'
-      condition:
-        $ref: '#/definitions/ConditionMap'
-      resourceTypeUuid:
-        type: string
-        title: Resource Type UUID
-        description: The UUIDs of the resource type associated with the policy
-      resourceAttributes:
-        type: array
-        items:
+          title: Last Modified By
+          description: A string containing the universal identifier DN of the subject that
+            most recently updated the policy
+        lastModifiedDate:
+          type: string
+          title: Last Modified date
+          description: An integer containing the last modified date and time, in number of
+            seconds
+        createdBy:
+          type: string
+          title: Created By
+          description: A string containing the universal identifier DN of the subject that
+            created the policy
+        creationDate:
+          type: string
+          title: Creation Date
+          description: An integer containing the creation date and time, in number of
+            seconds
+    DeletePolicyResponse:
+      title: Policy Resource Schema
+      description: Json schema for the policy resource
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: String matching the name of the application
+        active:
+          type: boolean
+          title: Active flag
+          description: Boolean indicating whether OpenAM considers the policy active for
+            evaluation purposes, defaults to false
+        description:
+          type: string
+          title: Description
+          description: String describing the policy
+        applicationName:
+          type: string
+          title: Application name
+          description: String containing the application name, such as "HmctsPolicySet"
+        actionValues:
+          $ref: "#/components/schemas/ActionMap"
+        resources:
+          type: array
+          items:
+            type: string
+          title: Resources
+          description: List of the resource name pattern strings to which the policy
+            applies. Must conform to the pattern templates provided by the
+            associated Managing Resource Types resource type
+        subject:
+          $ref: "#/components/schemas/SubjectMap"
+        condition:
+          $ref: "#/components/schemas/ConditionMap"
+        resourceTypeUuid:
+          type: string
+          title: Resource Type UUID
+          description: The UUIDs of the resource type associated with the policy
+        resourceAttributes:
+          type: array
+          items:
+            type: object
+          title: Resource Attributes
+          description: List of attributes to return with decisions. These attributes are
+            known as response attributes
+        lastModifiedBy:
+          type: string
+          title: Last Modified By
+          description: A string containing the universal identifier DN of the subject that
+            most recently updated the policy
+        lastModifiedDate:
+          type: string
+          title: Last Modified date
+          description: An integer containing the last modified date and time, in number of
+            seconds
+        createdBy:
+          type: string
+          title: Created By
+          description: A string containing the universal identifier DN of the subject that
+            created the policy
+        creationDate:
+          type: string
+          title: Creation Date
+          description: An integer containing the creation date and time, in number of
+            seconds
+    EvaluatePoliciesRequest:
+      title: Evaluate Request
+      description: Evaluate Request
+      type: object
+      required:
+        - application
+        - resources
+      properties:
+        resources:
+          type: array
+          items:
+            type: string
+          title: Resources
+          description: Specifies the list of resources for which to return decisions
+        application:
+          type: string
+          title: Application
+          description: String containing the application name, such as "HmctsPolicySet"
+        subject:
           type: object
-        title: Resource Attributes
-        description: List of attributes to return with decisions. These attributes are known as response attributes
-      lastModifiedBy:
-        type: string
-        title: Last Modified By
-        description: A string containing the universal identifier DN of the subject that most recently updated the policy
-      lastModifiedDate:
-        type: string
-        title: Last Modified date
-        description: 'An integer containing the last modified date and time, in number of seconds'
-      createdBy:
-        type: string
-        title: Created By
-        description: A string containing the universal identifier DN of the subject that created the policy
-      creationDate:
-        type: string
-        title: Creation Date
-        description: 'An integer containing the creation date and time, in number of seconds'
+          properties:
+            ssoToken:
+              type: string
+              title: SSOToken
+              description: The value is the SSO token ID string for the subject
+            jwt:
+              type: string
+              title: JWT
+              description: The value is a JWT string
+            claims:
+              type: object
+              title: Claims
+              description: The value is an object (map) of JWT claims to their values.
+          title: Subject
+          description: Holds an object that represents the subject. You can specify one or
+            more of the following keys. If you specify multiple keys, the
+            subject can have multiple associated principals, and you can use
+            subject conditions corresponding to any type in the request
+        environment:
+          type: object
+          title: Environment
+          description: Holds a map of keys to lists of values
+    EvaluatePoliciesResponse:
+      type: array
+      title: Evaluate and evaluateTree schema response
+      description: Evaluate and evaluateTree schema response
+      items:
+        type: object
+        properties:
+          resource:
+            type: string
+            title: Resource
+            description: Specifies the root resource for the decisions to return
+          actions:
+            $ref: "#/components/schemas/ActionMap"
+          attributes:
+            type: object
+            title: Attributes
+            description: A map of attribute names to their values, if any response
+              attributes are returned according to applicable policies
+          advices:
+            type: object
+            title: Advices
+            description: A map of advice names to their values, if any advice is returned
+              according to applicable policies
+    PostPolicyRequest:
+      title: Policy Resource Schema
+      description: Json schema for the policy resource
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: String matching the name of the application
+        active:
+          type: boolean
+          title: Active flag
+          description: Boolean indicating whether OpenAM considers the policy active for
+            evaluation purposes, defaults to false
+        description:
+          type: string
+          title: Description
+          description: String describing the policy
+        applicationName:
+          type: string
+          title: Application name
+          description: String containing the application name, such as "HmctsPolicySet"
+        actionValues:
+          $ref: "#/components/schemas/ActionMap"
+        resources:
+          type: array
+          items:
+            type: string
+          title: Resources
+          description: List of the resource name pattern strings to which the policy
+            applies. Must conform to the pattern templates provided by the
+            associated Managing Resource Types resource type
+        subject:
+          $ref: "#/components/schemas/SubjectMap"
+        condition:
+          $ref: "#/components/schemas/ConditionMap"
+        resourceTypeUuid:
+          type: string
+          title: Resource Type UUID
+          description: The UUIDs of the resource type associated with the policy
+        resourceAttributes:
+          type: array
+          items:
+            type: object
+          title: Resource Attributes
+          description: List of attributes to return with decisions. These attributes are
+            known as response attributes
+        lastModifiedBy:
+          type: string
+          title: Last Modified By
+          description: A string containing the universal identifier DN of the subject that
+            most recently updated the policy
+        lastModifiedDate:
+          type: string
+          title: Last Modified date
+          description: An integer containing the last modified date and time, in number of
+            seconds
+        createdBy:
+          type: string
+          title: Created By
+          description: A string containing the universal identifier DN of the subject that
+            created the policy
+        creationDate:
+          type: string
+          title: Creation Date
+          description: An integer containing the creation date and time, in number of
+            seconds
+    PostPolicyResponse:
+      title: Policy Resource Schema
+      description: Json schema for the policy resource
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: String matching the name of the application
+        active:
+          type: boolean
+          title: Active flag
+          description: Boolean indicating whether OpenAM considers the policy active for
+            evaluation purposes, defaults to false
+        description:
+          type: string
+          title: Description
+          description: String describing the policy
+        applicationName:
+          type: string
+          title: Application name
+          description: String containing the application name, such as "HmctsPolicySet"
+        actionValues:
+          $ref: "#/components/schemas/ActionMap"
+        resources:
+          type: array
+          items:
+            type: string
+          title: Resources
+          description: List of the resource name pattern strings to which the policy
+            applies. Must conform to the pattern templates provided by the
+            associated Managing Resource Types resource type
+        subject:
+          $ref: "#/components/schemas/SubjectMap"
+        condition:
+          $ref: "#/components/schemas/ConditionMap"
+        resourceTypeUuid:
+          type: string
+          title: Resource Type UUID
+          description: The UUIDs of the resource type associated with the policy
+        resourceAttributes:
+          type: array
+          items:
+            type: object
+          title: Resource Attributes
+          description: List of attributes to return with decisions. These attributes are
+            known as response attributes
+        lastModifiedBy:
+          type: string
+          title: Last Modified By
+          description: A string containing the universal identifier DN of the subject that
+            most recently updated the policy
+        lastModifiedDate:
+          type: string
+          title: Last Modified date
+          description: An integer containing the last modified date and time, in number of
+            seconds
+        createdBy:
+          type: string
+          title: Created By
+          description: A string containing the universal identifier DN of the subject that
+            created the policy
+        creationDate:
+          type: string
+          title: Creation Date
+          description: An integer containing the creation date and time, in number of
+            seconds
+    PutPolicyRequest:
+      title: Policy Resource Schema
+      description: Json schema for the policy resource
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: String matching the name of the application
+        active:
+          type: boolean
+          title: Active flag
+          description: Boolean indicating whether OpenAM considers the policy active for
+            evaluation purposes, defaults to false
+        description:
+          type: string
+          title: Description
+          description: String describing the policy
+        applicationName:
+          type: string
+          title: Application name
+          description: String containing the application name, such as "HmctsPolicySet"
+        actionValues:
+          $ref: "#/components/schemas/ActionMap"
+        resources:
+          type: array
+          items:
+            type: string
+          title: Resources
+          description: List of the resource name pattern strings to which the policy
+            applies. Must conform to the pattern templates provided by the
+            associated Managing Resource Types resource type
+        subject:
+          $ref: "#/components/schemas/SubjectMap"
+        condition:
+          $ref: "#/components/schemas/ConditionMap"
+        resourceTypeUuid:
+          type: string
+          title: Resource Type UUID
+          description: The UUIDs of the resource type associated with the policy
+        resourceAttributes:
+          type: array
+          items:
+            type: object
+          title: Resource Attributes
+          description: List of attributes to return with decisions. These attributes are
+            known as response attributes
+        lastModifiedBy:
+          type: string
+          title: Last Modified By
+          description: A string containing the universal identifier DN of the subject that
+            most recently updated the policy
+        lastModifiedDate:
+          type: string
+          title: Last Modified date
+          description: An integer containing the last modified date and time, in number of
+            seconds
+        createdBy:
+          type: string
+          title: Created By
+          description: A string containing the universal identifier DN of the subject that
+            created the policy
+        creationDate:
+          type: string
+          title: Creation Date
+          description: An integer containing the creation date and time, in number of
+            seconds
+    PutPolicyResponse:
+      title: Policy Resource Schema
+      description: Json schema for the policy resource
+      type: object
+      properties:
+        name:
+          type: string
+          title: Name
+          description: String matching the name of the application
+        active:
+          type: boolean
+          title: Active flag
+          description: Boolean indicating whether OpenAM considers the policy active for
+            evaluation purposes, defaults to false
+        description:
+          type: string
+          title: Description
+          description: String describing the policy
+        applicationName:
+          type: string
+          title: Application name
+          description: String containing the application name, such as "HmctsPolicySet"
+        actionValues:
+          $ref: "#/components/schemas/ActionMap"
+        resources:
+          type: array
+          items:
+            type: string
+          title: Resources
+          description: List of the resource name pattern strings to which the policy
+            applies. Must conform to the pattern templates provided by the
+            associated Managing Resource Types resource type
+        subject:
+          $ref: "#/components/schemas/SubjectMap"
+        condition:
+          $ref: "#/components/schemas/ConditionMap"
+        resourceTypeUuid:
+          type: string
+          title: Resource Type UUID
+          description: The UUIDs of the resource type associated with the policy
+        resourceAttributes:
+          type: array
+          items:
+            type: object
+          title: Resource Attributes
+          description: List of attributes to return with decisions. These attributes are
+            known as response attributes
+        lastModifiedBy:
+          type: string
+          title: Last Modified By
+          description: A string containing the universal identifier DN of the subject that
+            most recently updated the policy
+        lastModifiedDate:
+          type: string
+          title: Last Modified date
+          description: An integer containing the last modified date and time, in number of
+            seconds
+        createdBy:
+          type: string
+          title: Created By
+          description: A string containing the universal identifier DN of the subject that
+            created the policy
+        creationDate:
+          type: string
+          title: Creation Date
+          description: An integer containing the creation date and time, in number of
+            seconds
