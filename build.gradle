@@ -15,7 +15,7 @@ plugins {
     id 'maven-publish'
 }
 
-version = '4.0.0'
+version = '4.0.1'
 
 group = 'uk.gov.hmcts.reform.idam'
 
