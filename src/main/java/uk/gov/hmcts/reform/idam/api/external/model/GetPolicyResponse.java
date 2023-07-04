@@ -11,15 +11,15 @@ import uk.gov.hmcts.reform.idam.api.external.model.ActionMap;
 import uk.gov.hmcts.reform.idam.api.external.model.ConditionMap;
 import uk.gov.hmcts.reform.idam.api.external.model.SubjectMap;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * Json schema for the policy resource
  */
 @ApiModel(description = "Json schema for the policy resource")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:51.960+01:00")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:51.960+01:00")
 
 public class GetPolicyResponse   {
   @JsonProperty("name")

@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 import uk.gov.hmcts.reform.idam.api.internal.model.JsonWebKey;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * JsonWebKeySet
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:50.979+01:00")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:50.979+01:00")
 
 public class JsonWebKeySet   {
   @JsonProperty("keys")

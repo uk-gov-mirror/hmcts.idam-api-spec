@@ -5,15 +5,15 @@ import io.swagger.annotations.ApiModel;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * Specifies the subject conditions to which the policy applies, where subjects can be combined by using the built-in types \&quot;AND\&quot;, \&quot;OR\&quot;, and \&quot;NOT\&quot;, and where subject implementations are pluggable
  */
 @ApiModel(description = "Specifies the subject conditions to which the policy applies, where subjects can be combined by using the built-in types \"AND\", \"OR\", and \"NOT\", and where subject implementations are pluggable")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:51.960+01:00")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:51.960+01:00")
 
 public class SubjectMap extends HashMap<String, Object>  {
 

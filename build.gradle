@@ -15,14 +15,14 @@ plugins {
     id 'maven-publish'
 }
 
-version = '3.10.2'
+version = '4.0.0'
 
 group = 'uk.gov.hmcts.reform.idam'
 
 description = """idam-api-spec"""
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -34,104 +34,105 @@ repositories {
     jcenter()
 }
 
-configurations {
-    generatedCompile
-    compile.extendsFrom generatedCompile
-}
+//configurations {
+//    generatedCompile
+//    compile.extendsFrom generatedCompile
+//}
 
 dependencies {
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.6.6'
-    generatedCompile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.6.6'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
-    generatedCompile group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
-    generatedCompile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
-    generatedCompile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.2'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.1.1'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '3.1.1'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.1.1'
+    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '3.0.0'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.13.2'
+//    generatedCompile group: 'jakarta.validation', name: 'validation-api', version: '2.0.1.Final'
 }
-
-project.ext {
-    swaggerTargetFolder = 'src/generated/java'
-}
-
-def generateCodeFromSwagger(swaggerSourceFile, packageName, importMappings) {
-    def config = new CodegenConfigurator()
-    config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
-    config.setOutputDir("$buildDir")
-    config.setLang('spring')
-    config.setAdditionalProperties([
-            'generateApis'                 : 'false',
-            'interfaceOnly'                : 'true',
-            'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api.' + packageName,
-            'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.' + packageName +'.model',
-            'sourceFolder'                 : project.swaggerTargetFolder,
-            'dateLibrary'                  : 'java8',
-            'useTags'                      : (packageName == 'external' ? 'true' : 'false'),
-            'generateModelDocumentation'   : 'false'
-    ])
-    if (importMappings != null) {
-        ((LinkedHashMap<String, String>) importMappings).each { k, v -> config.addImportMapping(k, v) }
-    }
-    new DefaultGenerator().opts(config.toClientOptInput()).generate()
-}
-
-task generateApi {
-    outputs.dir("$buildDir")
-    doLast{
-        generateCodeFromSwagger('src/main/resources/openid-connect.yaml', 'external', null)
-
-        generateCodeFromSwagger('src/main/resources/shared.yaml', 'shared', null)
-
-        generateCodeFromSwagger('src/main/resources/internal-admin-api.yaml', 'internal', [
-                'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
-                'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap',
-                'ArrayOfRoles' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfRoles',
-                'Role' : 'uk.gov.hmcts.reform.idam.api.shared.model.Role',
-                'ArrayOfStrings' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfStrings',
-                'RoleDetail' : 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDetail',
-                'UpdateRole' : 'uk.gov.hmcts.reform.idam.api.shared.model.UpdateRole',
-                'PatchRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.PatchRequest',
-                'PatchOperation' : 'uk.gov.hmcts.reform.idam.api.shared.model.PatchOperation',
-                'RegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.RegisterRequest',
-                'SelfRegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.SelfRegisterRequest'
-        ])
-
-        generateCodeFromSwagger('src/main/resources/external-user-mgmt-api.yaml', 'external', [
-                'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition',
-                'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
-                'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap'
-        ])
-
-        generateCodeFromSwagger('src/main/resources/external-sso-api.yaml', 'external', [
-            'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User'
-        ])
-
-        generateCodeFromSwagger('src/main/resources/external-dynamic-role-assign-api.yaml', 'external', [
-                'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition'
-        ])
-
-        generateCodeFromSwagger('src/main/resources/external-policies-api.yaml', 'external', null)
-
-        generateCodeFromSwagger('src/main/resources/external-bulk-request-api.yaml', 'external', null)
-
-        generateCodeFromSwagger('src/main/resources/external-batch-status-api.yaml', 'external', null)
-
-    }
-}
-
-sourceSets {
-    generated {
-        java {
-            srcDirs "$buildDir/$swaggerTargetFolder"
-        }
-    }
-}
-
-jar {
-    from sourceSets.generated.output
-}
-
-compileGeneratedJava.dependsOn generateApi
-classes.dependsOn generatedClasses
-compileJava.dependsOn compileGeneratedJava
+//
+//project.ext {
+//    swaggerTargetFolder = 'src/generated/java'
+//}
+//
+//def generateCodeFromSwagger(swaggerSourceFile, packageName, importMappings) {
+//    def config = new CodegenConfigurator()
+//    config.setInputSpec("file:///$projectDir/$swaggerSourceFile")
+//    config.setOutputDir("$buildDir")
+//    config.setLang('spring')
+//    config.setAdditionalProperties([
+//            'generateApis'                 : 'false',
+//            'interfaceOnly'                : 'true',
+//            'apiPackage'                   : 'uk.gov.hmcts.reform.idam.api.' + packageName,
+//            'modelPackage'                 : 'uk.gov.hmcts.reform.idam.api.' + packageName +'.model',
+//            'sourceFolder'                 : project.swaggerTargetFolder,
+//            'dateLibrary'                  : 'java8',
+//            'useTags'                      : (packageName == 'external' ? 'true' : 'false'),
+//            'generateModelDocumentation'   : 'false'
+//    ])
+//    if (importMappings != null) {
+//        ((LinkedHashMap<String, String>) importMappings).each { k, v -> config.addImportMapping(k, v) }
+//    }
+//    new DefaultGenerator().opts(config.toClientOptInput()).generate()
+//}
+//
+//task generateApi {
+//    outputs.dir("$buildDir")
+//    doLast{
+//        generateCodeFromSwagger('src/main/resources/openid-connect.yaml', 'external', null)
+//
+//        generateCodeFromSwagger('src/main/resources/shared.yaml', 'shared', null)
+//
+//        generateCodeFromSwagger('src/main/resources/internal-admin-api.yaml', 'internal', [
+//                'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
+//                'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap',
+//                'ArrayOfRoles' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfRoles',
+//                'Role' : 'uk.gov.hmcts.reform.idam.api.shared.model.Role',
+//                'ArrayOfStrings' : 'uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfStrings',
+//                'RoleDetail' : 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDetail',
+//                'UpdateRole' : 'uk.gov.hmcts.reform.idam.api.shared.model.UpdateRole',
+//                'PatchRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.PatchRequest',
+//                'PatchOperation' : 'uk.gov.hmcts.reform.idam.api.shared.model.PatchOperation',
+//                'RegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.RegisterRequest',
+//                'SelfRegisterRequest' : 'uk.gov.hmcts.reform.idam.api.shared.model.SelfRegisterRequest'
+//        ])
+//
+//        generateCodeFromSwagger('src/main/resources/external-user-mgmt-api.yaml', 'external', [
+//                'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition',
+//                'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User',
+//                'ErrorMap' : 'uk.gov.hmcts.reform.idam.api.shared.model.ErrorMap'
+//        ])
+//
+//        generateCodeFromSwagger('src/main/resources/external-sso-api.yaml', 'external', [
+//            'User': 'uk.gov.hmcts.reform.idam.api.shared.model.User'
+//        ])
+//
+//        generateCodeFromSwagger('src/main/resources/external-dynamic-role-assign-api.yaml', 'external', [
+//                'RoleDefinition': 'uk.gov.hmcts.reform.idam.api.shared.model.RoleDefinition'
+//        ])
+//
+//        generateCodeFromSwagger('src/main/resources/external-policies-api.yaml', 'external', null)
+//
+//        generateCodeFromSwagger('src/main/resources/external-bulk-request-api.yaml', 'external', null)
+//
+//        generateCodeFromSwagger('src/main/resources/external-batch-status-api.yaml', 'external', null)
+//
+//    }
+//}
+//
+//sourceSets {
+//    generated {
+//        java {
+//            srcDirs "$buildDir/$swaggerTargetFolder"
+//        }
+//    }
+//}
+//
+//jar {
+//    from sourceSets.generated.output
+//}
+//
+//compileGeneratedJava.dependsOn generateApi
+//classes.dependsOn generatedClasses
+//compileJava.dependsOn compileGeneratedJava
 
 publishing {
     publications {

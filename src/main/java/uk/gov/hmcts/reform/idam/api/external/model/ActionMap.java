@@ -5,15 +5,15 @@ import io.swagger.annotations.ApiModel;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.validation.annotation.Validated;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 
 /**
  * Set of string action names, each set to a boolean indicating whether the action is allowed. Chosen from the available actions provided by the associated Managing Resource Types resource type
  */
 @ApiModel(description = "Set of string action names, each set to a boolean indicating whether the action is allowed. Chosen from the available actions provided by the associated Managing Resource Types resource type")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:51.960+01:00")
+@jakarta.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2023-07-04T00:25:51.960+01:00")
 
 public class ActionMap extends HashMap<String, Object>  {
 
