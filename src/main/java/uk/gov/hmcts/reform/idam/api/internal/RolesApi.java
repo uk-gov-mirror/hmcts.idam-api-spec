@@ -98,7 +98,7 @@ public interface RolesApi {
         @ApiResponse(code = 404, message = "The role was not found") })
     @RequestMapping(value = "/roles/{roleId}/assignableRoles",
         method = RequestMethod.GET)
-    default ResponseEntity<uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfStrings> getAssignableRoles(@ApiParam(value = "The Base64-encoded authorization token" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "The id of the role to retrieve the assignable roles for",required=true) @PathVariable("roleId") String roleId) {
+    default ResponseEntity<List<String>> getAssignableRoles(@ApiParam(value = "The Base64-encoded authorization token" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "The id of the role to retrieve the assignable roles for",required=true) @PathVariable("roleId") String roleId) {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {

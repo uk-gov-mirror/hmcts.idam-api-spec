@@ -79,7 +79,7 @@ public interface ServicesApi {
         @ApiResponse(code = 404, message = "The service was not found") })
     @RequestMapping(value = "/services/{serviceId}/roles",
         method = RequestMethod.GET)
-    default ResponseEntity<uk.gov.hmcts.reform.idam.api.shared.model.ArrayOfStrings> getRolesForService(@ApiParam(value = "The Base64-encoded authorization token" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "The serviceId of the roles to retrieve",required=true) @PathVariable("serviceId") String serviceId) {
+    default ResponseEntity<List<String>> getRolesForService(@ApiParam(value = "The Base64-encoded authorization token" ,required=true) @RequestHeader(value="Authorization", required=true) String authorization,@ApiParam(value = "The serviceId of the roles to retrieve",required=true) @PathVariable("serviceId") String serviceId) {
         if(getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
             if (getAcceptHeader().get().contains("application/json")) {
                 try {
