@@ -92,7 +92,8 @@ public class User   {
   **/
   @ApiModelProperty(value = "The first name of the user")
 
-@Size(min=1) 
+  @Size(min=1)
+  @NotNull
   public String getForename() {
     return forename;
   }
@@ -112,7 +113,8 @@ public class User   {
   **/
   @ApiModelProperty(value = "The last name of the user")
 
-@Size(min=1) 
+  @Size(min=1)
+  @NotNull
   public String getSurname() {
     return surname;
   }
