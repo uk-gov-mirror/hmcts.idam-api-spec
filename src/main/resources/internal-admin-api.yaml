@@ -1436,6 +1436,19 @@ definitions:
         description: Password supplied by the user which will be set on his account
     required: [token, code, password]
 
+  ActivateByIdRequest:
+    type: object
+    properties:
+      code:
+        type: string
+        description: Unique string provided in the activation email
+      password:
+        type: string
+        minLength: 8
+        maxLength: 256
+        description: Password supplied by the user which will be set on his account
+    required: [code, password]
+
   ActivationResult:
     type: object
     properties:
